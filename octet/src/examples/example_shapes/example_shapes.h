@@ -26,10 +26,12 @@ namespace octet {
       material *red = new material(vec4(1, 0, 0, 1));
       material *green = new material(vec4(0, 1, 0, 1));
       material *blue = new material(vec4(0, 0, 1, 1));
+	  //different color
+	  material *colorX = new material(vec4(0, 1, 1, 1));
 
       mat4t mat;
-      mat.translate(-3, 6, 0);
-      app_scene->add_shape(mat, new mesh_sphere(vec3(2, 2, 2), 2), red, true);
+      mat.translate(-1, 6, 0);
+      app_scene->add_shape(mat, new mesh_sphere(vec3(2, 2, 2), 2), colorX, true);
 
       mat.loadIdentity();
       mat.translate(0, 10, 0);
