@@ -30,12 +30,8 @@ namespace octet {
 	  material *colorX = new material(vec4(0, 1, 1, 1));
 
       mat4t mat;
-      mat.translate(-1, 7, 0);
-      app_scene->add_shape(mat, new mesh_sphere(vec3(2, 3, 2), 2), colorX, true);
-//another sphere
-	  mat.loadIdentity();
-	  mat.translate(0, 5, 0);
-	  app_scene->add_shape(mat, new mesh_sphere(vec3(2, 2, 2), 2), blue, true);
+      mat.translate(-1, 6, 0);
+      app_scene->add_shape(mat, new mesh_sphere(vec3(2, 2, 2), 2), colorX, true);
 
       mat.loadIdentity();
       mat.translate(0, 10, 0);
