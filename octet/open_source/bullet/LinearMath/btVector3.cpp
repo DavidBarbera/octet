@@ -26,7 +26,7 @@
 
 #if defined BT_USE_SIMD_VECTOR3
 
-#ifdef DEBUG
+#if DEBUG
 #include <string.h>//for memset
 #endif
 
@@ -62,8 +62,8 @@ long _maxdot_large( const float *vv, const float *vec, unsigned long count, floa
     size_t segment = 0;
     float4 stack_array[ STACK_ARRAY_COUNT ];
     
-#ifdef DEBUG
-    memset( stack_array, -1, STACK_ARRAY_COUNT * sizeof(stack_array[0]) );
+#if DEBUG
+    //memset( stack_array, -1, STACK_ARRAY_COUNT * sizeof(stack_array[0]) );
 #endif
     
     size_t index;
@@ -447,8 +447,8 @@ long _mindot_large( const float *vv, const float *vec, unsigned long count, floa
     size_t segment = 0;
     float4 stack_array[ STACK_ARRAY_COUNT ];
     
-#ifdef DEBUG
-    memset( stack_array, -1, STACK_ARRAY_COUNT * sizeof(stack_array[0]) );
+#if DEBUG
+    //memset( stack_array, -1, STACK_ARRAY_COUNT * sizeof(stack_array[0]) );
 #endif
     
     size_t index;

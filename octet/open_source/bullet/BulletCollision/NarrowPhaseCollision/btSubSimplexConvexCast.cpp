@@ -31,9 +31,9 @@ m_convexA(convexA),m_convexB(convexB)
 ///Typically the conservative advancement reaches solution in a few iterations, clip it to 32 for degenerate cases.
 ///See discussion about this here http://continuousphysics.com/Bullet/phpBB2/viewtopic.php?t=565
 #ifdef BT_USE_DOUBLE_PRECISION
-#define sscc_MAX_ITERATIONS 64
+#define MAX_ITERATIONS 64
 #else
-#define sscc_MAX_ITERATIONS 32
+#define MAX_ITERATIONS 32
 #endif
 bool	btSubsimplexConvexCast::calcTimeOfImpact(
 		const btTransform& fromA,
@@ -61,14 +61,14 @@ bool	btSubsimplexConvexCast::calcTimeOfImpact(
 	btVector3 supVertexA = fromA(m_convexA->localGetSupportingVertex(-r*fromA.getBasis()));
 	btVector3 supVertexB = fromB(m_convexB->localGetSupportingVertex(r*fromB.getBasis()));
 	v = supVertexA-supVertexB;
-	int maxIter = sscc_MAX_ITERATIONS;
+	int maxIter = MAX_ITERATIONS;
 
 	btVector3 n;
 	n.setValue(btScalar(0.),btScalar(0.),btScalar(0.));
-	bool hasResult = false;
+	
 	btVector3 c;
 
-	btScalar lastLambda = lambda;
+	
 
 
 	btScalar dist2 = v.length2();
@@ -109,9 +109,9 @@ bool	btSubsimplexConvexCast::calcTimeOfImpact(
 				//m_simplexSolver->reset();
 				//check next line
 				 w = supVertexA-supVertexB;
-				lastLambda = lambda;
+				
 				n = v;
-				hasResult = true;
+				
 			}
 		} 
 		///Just like regular GJK only add the vertex if it isn't already (close) to current vertex, it would lead to divisions by zero and NaN etc.
@@ -121,7 +121,7 @@ bool	btSubsimplexConvexCast::calcTimeOfImpact(
 		if (m_simplexSolver->closest(v))
 		{
 			dist2 = v.length2();
-			hasResult = true;
+			
 			//todo: check this normal for validity
 			//n=v;
 			//printf("V=%f , %f, %f\n",v[0],v[1],v[2]);
@@ -133,7 +133,7 @@ bool	btSubsimplexConvexCast::calcTimeOfImpact(
 		} 
 	}
 
-	//int numiter = sscc_MAX_ITERATIONS - maxIter;
+	//int numiter = MAX_ITERATIONS - maxIter;
 //	printf("number of iterations: %d", numiter);
 	
 	//don't report a time of impact when moving 'away' from the hitnormal

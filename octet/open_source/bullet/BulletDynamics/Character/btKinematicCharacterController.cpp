@@ -135,7 +135,7 @@ btVector3 btKinematicCharacterController::perpindicularComponent (const btVector
 btKinematicCharacterController::btKinematicCharacterController (btPairCachingGhostObject* ghostObject,btConvexShape* convexShape,btScalar stepHeight, int upAxis)
 {
 	m_upAxis = upAxis;
-	m_addedMargin = (btScalar)0.02;
+	m_addedMargin = 0.02;
 	m_walkDirection.setValue(0,0,0);
 	m_useGhostObjectSweepTest = true;
 	m_ghostObject = ghostObject;
@@ -146,8 +146,8 @@ btKinematicCharacterController::btKinematicCharacterController (btPairCachingGho
 	m_velocityTimeInterval = 0.0;
 	m_verticalVelocity = 0.0;
 	m_verticalOffset = 0.0;
-	m_gravity = (btScalar)9.8 * 3 ; // 3G acceleration.
-  m_fallSpeed = (btScalar)55.0; // Terminal velocity of a sky diver in m/s.
+	m_gravity = 9.8 * 3 ; // 3G acceleration.
+	m_fallSpeed = 55.0; // Terminal velocity of a sky diver in m/s.
 	m_jumpSpeed = 10.0; // ?
 	m_wasOnGround = false;
 	m_wasJumping = false;
@@ -381,8 +381,8 @@ void btKinematicCharacterController::stepForwardAndStrafe ( btCollisionWorld* co
 		if (callback.hasHit())
 		{	
 			// we moved only a fraction
-			btScalar hitDistance;
-			hitDistance = (callback.m_hitPointWorld - m_currentPosition).length();
+			//btScalar hitDistance;
+			//hitDistance = (callback.m_hitPointWorld - m_currentPosition).length();
 
 //			m_currentPosition.setInterpolate3 (m_currentPosition, m_targetPosition, callback.m_closestHitFraction);
 
@@ -636,7 +636,7 @@ void btKinematicCharacterController::playerStep (  btCollisionWorld* collisionWo
 //	printf("  dt = %f", dt);
 
 	// quick check...
-	if (!m_useWalkDirection && m_velocityTimeInterval <= 0.0) {
+	if (!m_useWalkDirection && (m_velocityTimeInterval <= 0.0 || m_walkDirection.fuzzyZero())) {
 //		printf("\n");
 		return;		// no motion
 	}

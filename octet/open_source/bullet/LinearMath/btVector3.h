@@ -297,7 +297,7 @@ public:
 	SIMD_FORCE_INLINE btVector3& normalize() 
 	{
 		
-		//btAssert(!fuzzyZero());
+		btAssert(!fuzzyZero());
 
 #if defined(BT_USE_SSE_IN_API) && defined (BT_USE_SSE)		
         // dot product first
@@ -501,10 +501,10 @@ public:
 		__m128 tmp3 = _mm_add_ps(r0,r1);
 		mVec128 = tmp3;
 #elif defined(BT_USE_NEON)
-		mVec128 = vsubq_f32(v1.mVec128, v0.mVec128);
-		mVec128 = vmulq_n_f32(mVec128, rt);
-		mVec128 = vaddq_f32(mVec128, v0.mVec128);
-#else	
+		float32x4_t vl = vsubq_f32(v1.mVec128, v0.mVec128);
+		vl = vmulq_n_f32(vl, rt);
+		mVec128 = vaddq_f32(vl, v0.mVec128);
+#else
 		btScalar s = btScalar(1.0) - rt;
 		m_floats[0] = s * v0.m_floats[0] + rt * v1.m_floats[0];
 		m_floats[1] = s * v0.m_floats[1] + rt * v1.m_floats[1];
