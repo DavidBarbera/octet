@@ -27,6 +27,16 @@ namespace octet { namespace scene {
     /// lights available
     dynarray<ref<light_instance> > light_instances;
 
+	// to keep track of each rigidbody in our physics world
+	struct  btObject {
+		int id;
+		btRigidBody* body;
+		btObject(btRigidBody* b, int i ) : body(b), id(i) {}
+	};
+	dynarray<btObject*> bodies;
+	int b = 0;
+
+
     /// set this to draw bounding boxes
     bool render_aabbs;
     bool render_debug_lines;
@@ -289,6 +299,9 @@ namespace octet { namespace scene {
 
     ~visual_scene() {
       #ifdef OCTET_BULLET
+//		for (int i = 0; i < bodies.size(); i++) {
+//			delete bodies[i]->body;
+//		}
         delete world;
         delete solver;
         delete broadphase;
@@ -327,6 +340,8 @@ namespace octet { namespace scene {
     
           btRigidBody * rigid_body = new btRigidBody(mass, motionState, shape, inertiaTensor);
           world->addRigidBody(rigid_body); //add rigid_body to our stack (world) of rigid bodies (btRigidBody's)
+		  bodies.push_back(new btObject(rigid_body, b));
+		  b++;
           rigid_body->setUserPointer(node); // arrange our rigid body to work in bullet?
           node->set_rigid_body(rigid_body); // arrange our rigid body to work in octet ?
         }
@@ -334,7 +349,15 @@ namespace octet { namespace scene {
       return result;
     }
 
-
+	void add_Hinge(){
+				
+		const btVector3 btPivotA(1.5f, -1.5f, 0.0f);
+		btVector3 btAxisA(0.0f, 1.0f, 0.0f);
+		btHingeConstraint* ObjectHinge;
+		ObjectHinge = new btHingeConstraint(*(bodies[2]->body), btPivotA, btAxisA);
+		world->addConstraint(ObjectHinge);
+		
+	}
 
 
 

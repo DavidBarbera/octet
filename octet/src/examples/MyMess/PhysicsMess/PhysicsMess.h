@@ -37,7 +37,7 @@ namespace octet {
 
 			mat.loadIdentity();
 			mat.translate(0, 5, 0);
-			app_scene->add_shape_ndHinge(mat, new mesh_box(vec3(1.5, 1.5, 0.25)), red, true);
+			app_scene->add_shape(mat, new mesh_box(vec3(1.5, 1.5, 0.25)), red, true);
 
 			mat.loadIdentity();
 			mat.translate(3, 6, 0);
@@ -47,6 +47,8 @@ namespace octet {
 			mat.loadIdentity();
 			mat.translate(0, -1, 0);
 			app_scene->add_shape(mat, new mesh_box(vec3(200, 1, 200)), green, false);
+
+			app_scene->add_Hinge();
 			
 
 			
