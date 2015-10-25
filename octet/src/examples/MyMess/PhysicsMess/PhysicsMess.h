@@ -47,7 +47,9 @@ namespace octet {
 			mat.loadIdentity();
 			mat.translate(0, -1, 0);
 			app_scene->add_shape(mat, new mesh_box(vec3(200, 1, 200)), green, false);
+			
 
+			
 	//constraints
 
 			// app_scene->world->getGravity;

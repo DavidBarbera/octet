@@ -334,6 +334,10 @@ namespace octet { namespace scene {
       return result;
     }
 
+
+
+
+
 	mesh_instance *add_shape_ndHinge(mat4t_in mat, mesh *msh, material *mtl, bool is_dynamic = false, float mass = 1, collison_shape_t *shape = NULL) {
 		scene_node *node = new scene_node(this);
 		node->access_nodeToParent() = mat;
