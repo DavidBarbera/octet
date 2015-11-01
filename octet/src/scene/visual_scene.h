@@ -339,7 +339,7 @@ namespace octet { namespace scene {
           if (is_dynamic) shape->calculateLocalInertia(mass, inertiaTensor);
     
           btRigidBody * rigid_body = new btRigidBody(mass, motionState, shape, inertiaTensor);
-          world->addRigidBody(rigid_body); //add rigid_body to our stack (world) of rigid bodies (btRigidBody's)
+          world->addRigidBody(rigid_body); //add rigid_body to our stack (world) of rigid bodies (*btRigidBody's)
 		  bodies.push_back(new btObject(rigid_body, b));
 		  b++;
           rigid_body->setUserPointer(node); // arrange our rigid body to work in bullet?
@@ -356,7 +356,32 @@ namespace octet { namespace scene {
 		btHingeConstraint* ObjectHinge;
 		ObjectHinge = new btHingeConstraint(*(bodies[2]->body), btPivotA, btAxisA);
 		world->addConstraint(ObjectHinge);
+
 		
+	}
+
+	void add_Spring(){
+		btTransform btrans;
+		btrans.setIdentity();
+		btrans.setOrigin(btVector3(btScalar(0.), btScalar(5.), btScalar(0.)));
+		btrans.getBasis().setEulerZYX(0, 0, 0);
+
+		btGeneric6DofSpringConstraint* ObjectSpring;
+		ObjectSpring = new btGeneric6DofSpringConstraint(*(bodies[0]->body), btrans, true);
+
+		ObjectSpring->setLinearUpperLimit(btVector3(0., 10., 0.));
+		ObjectSpring->setLinearLowerLimit(btVector3(0.,  -10., 0.));
+
+		ObjectSpring->setAngularLowerLimit(btVector3(0.f, 0.f, 0.f));
+		ObjectSpring->setAngularUpperLimit(btVector3(0.f, 0.f, 0.f));
+
+		world->addConstraint(ObjectSpring);
+
+		ObjectSpring->enableSpring(1, true);
+		ObjectSpring->setStiffness(1, 5.f);
+		ObjectSpring->setDamping(1, 1.f);
+		ObjectSpring->setEquilibriumPoint(1);
+
 	}
 
 

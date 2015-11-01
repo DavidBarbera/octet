@@ -28,19 +28,19 @@ namespace octet {
 			material *colorX = new material(vec4(0, 1, 1, 1));
 
 			mat4t mat;
-			mat.translate(-1, 7, 0);
+			mat.translate(0, 15, 0);
 			app_scene->add_shape(mat, new mesh_sphere(vec3(2, 3, 2), 2), colorX, true);
 			//another sphere
 			mat.loadIdentity();
-			mat.translate(0, 5, 0);
+			mat.translate(3, 7, 0);
 			app_scene->add_shape(mat, new mesh_sphere(vec3(2, 2, 2), 2), blue, true);
 
 			mat.loadIdentity();
-			mat.translate(0, 5, 0);
+			mat.translate(0, 4, 0);
 			app_scene->add_shape(mat, new mesh_box(vec3(1.5, 1.5, 0.25)), red, true);
 
 			mat.loadIdentity();
-			mat.translate(3, 6, 0);
+			mat.translate(2, 6, 0);
 			app_scene->add_shape(mat, new mesh_cylinder(zcylinder(vec3(0, 0, 0), 2, 4)), blue, true);
 
 			// ground
@@ -49,11 +49,12 @@ namespace octet {
 			app_scene->add_shape(mat, new mesh_box(vec3(200, 1, 200)), green, false);
 
 			app_scene->add_Hinge();
+			app_scene->add_Spring();
 			
 
 			
 	//constraints
-
+			//whatever
 			// app_scene->world->getGravity;
 
 
