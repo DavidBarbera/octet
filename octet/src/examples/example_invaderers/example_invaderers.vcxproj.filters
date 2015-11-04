@@ -30,7 +30,7 @@
     <Filter Include="math">
       <UniqueIdentifier>{7c4ee1aa-1f06-43ef-9adf-8e1befbd9d0e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaders">
+    <Filter Include="containers\shaders">
       <UniqueIdentifier>{22786083-47af-48b2-98c4-2963f667bc44}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -353,25 +353,25 @@
       <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="..\..\shaders\bump_shader.h">
-      <Filter>shaders</Filter>
+      <Filter>containers\shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\shaders\color_shader.h">
-      <Filter>shaders</Filter>
+      <Filter>containers\shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\shaders\compute_shader.h">
-      <Filter>shaders</Filter>
+      <Filter>containers\shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\shaders\phong_shader.h">
-      <Filter>shaders</Filter>
+      <Filter>containers\shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\shaders\shader.h">
-      <Filter>shaders</Filter>
+      <Filter>containers\shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\shaders\shaders.h">
-      <Filter>shaders</Filter>
+      <Filter>containers\shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\shaders\texture_shader.h">
-      <Filter>shaders</Filter>
+      <Filter>containers\shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\loaders\collada_builder.h">
       <Filter>loaders</Filter>
@@ -427,6 +427,7 @@
     <ClInclude Include="..\..\containers\string.h">
       <Filter>containers</Filter>
     </ClInclude>
+    <ClInclude Include="example_invaderers.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\resources\mesh_builder.inl">
