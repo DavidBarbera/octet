@@ -28,6 +28,7 @@ namespace octet { namespace scene {
     dynarray<ref<light_instance> > light_instances;
 
 	// to keep track of each rigidbody in our physics world
+#ifdef OCTET_BULLET
 	struct  btObject {
 		int id;
 		btRigidBody* body;
@@ -35,6 +36,7 @@ namespace octet { namespace scene {
 	};
 	dynarray<btObject*> bodies;
 	int b = 0;
+#endif
 
 
     /// set this to draw bounding boxes
@@ -348,7 +350,7 @@ namespace octet { namespace scene {
       #endif
       return result;
     }
-
+#ifdef OCTET_BULLET
 	void add_Hinge(){
 				
 		const btVector3 btPivotA(1.5f, -1.5f, 0.0f);
@@ -384,7 +386,7 @@ namespace octet { namespace scene {
 
 	}
 
-
+#endif
 
 	mesh_instance *add_shape_ndHinge(mat4t_in mat, mesh *msh, material *mtl, bool is_dynamic = false, float mass = 1, collison_shape_t *shape = NULL) {
 		scene_node *node = new scene_node(this);
