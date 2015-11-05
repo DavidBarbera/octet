@@ -153,14 +153,18 @@ namespace octet {
 		// shader to draw a textured triangle
 		texture_shader texture_shader_;
 
+		// recrods passing time
+		float t = .0f;
+		float delta = 0.015f;
+
 		enum {
 			num_sound_sources = 8,
-			num_rows = 5,
-			num_cols = 10,
+			//num_rows = 5,
+			//num_cols = 10,
 			num_missiles = 1,
 			num_bombs = 2,
 			num_borders = 4,
-			num_invaderers = num_rows * num_cols,
+			num_invaderers = 1,//num_rows * num_cols,
 
 			// sprite definitions
 			ship_sprite = 0,
@@ -475,12 +479,13 @@ namespace octet {
 
 		// move the array of enemies
 		void move_invaders(float dx, float dy) {
-			for (int j = 0; j != num_invaderers; ++j) {
-				sprite &invaderer = sprites[first_invaderer_sprite + j];
+			float speed = 0.05f;
+				sprite &invaderer = sprites[first_invaderer_sprite];
 				if (invaderer.is_enabled()) {
-					invaderer.translate(dx, dy);
+				//	invaderer.translate(2.75f*2.0f*cos(2*t)*delta,2.75f*3.0f*cos(3*t)*delta);
+					invaderer.translate(14.0f*cos(5*t)*delta,7.5f*cos(3*t)*delta);
 				}
-			}
+			
 		}
 
 		// check if any invaders hit the sides.
@@ -552,14 +557,14 @@ namespace octet {
 			sprites[game_over_sprite].init(GameOver, 20, 0, 3, 1.5f);
 
 			GLuint invaderer = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/invaderer.gif");
-			for (int j = 0; j != num_rows; ++j) {
-				for (int i = 0; i != num_cols; ++i) {
-					assert(first_invaderer_sprite + i + j*num_cols <= last_invaderer_sprite);
-					sprites[first_invaderer_sprite + i + j*num_cols].init(
-						invaderer, ((float)i - num_cols * 0.5f) * 0.5f, 2.50f - ((float)j * 0.5f), 0.25f, 0.25f
+		//	for (int j = 0; j != num_rows; ++j) {
+		//		for (int i = 0; i != num_cols; ++i) {
+					//assert(first_invaderer_sprite + i + j*num_cols <= last_invaderer_sprite);
+					sprites[first_invaderer_sprite /* + i + j*num_cols*/].init(
+						invaderer, 0 , 0 , 0.25f, 0.25f
 						);
-				}
-			}
+		//		}
+		//	}
 
 			// set the border to white for clarity
 			GLuint white = resource_dict::get_texture_handle(GL_RGB, "#ffffff");
@@ -620,11 +625,14 @@ namespace octet {
 
 			move_invaders(invader_velocity, 0);
 
-			sprite &border = sprites[first_border_sprite + (invader_velocity < 0 ? 2 : 3)];
-			if (invaders_collide(border)) {
-				invader_velocity = -invader_velocity;
-				move_invaders(invader_velocity, -0.1f);
-			}
+	//		sprite &border = sprites[first_border_sprite + (invader_velocity < 0 ? 2 : 3)];
+	//		if (invaders_collide(border)) {
+	//			invader_velocity = -invader_velocity;
+	//			move_invaders(invader_velocity, -0.1f);
+	//		}
+
+			t = t + delta;
+
 		}
 
 		// this is called to draw the world
