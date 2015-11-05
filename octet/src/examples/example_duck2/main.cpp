@@ -7,11 +7,9 @@
 // Text overlay
 //
 
-#define OCTET_BULLET 1
-
 #include "../../octet.h"
 
-#include "prototype.h"
+#include "example_duck2.h"
 
 /// Create a box with octet
 int main(int argc, char **argv) {
@@ -19,7 +17,7 @@ int main(int argc, char **argv) {
   octet::app::init_all(argc, argv);
 
   // our application.
-  octet::prototype app(argc, argv);
+  octet::example_duck2 app(argc, argv);
   app.init();
 
   // open windows
