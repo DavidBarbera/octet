@@ -27,6 +27,18 @@ namespace octet { namespace scene {
     /// lights available
     dynarray<ref<light_instance> > light_instances;
 
+	// to keep track of each rigidbody in our physics world
+#ifdef OCTET_BULLET
+	struct  btObject {
+		int id;
+		btRigidBody* body;
+		btObject(btRigidBody* b, int i ) : body(b), id(i) {}
+	};
+	dynarray<btObject*> bodies;
+	int b = 0;
+#endif
+
+
     /// set this to draw bounding boxes
     bool render_aabbs;
     bool render_debug_lines;
@@ -289,6 +301,9 @@ namespace octet { namespace scene {
 
     ~visual_scene() {
       #ifdef OCTET_BULLET
+//		for (int i = 0; i < bodies.size(); i++) {
+//			delete bodies[i]->body;
+//		}
         delete world;
         delete solver;
         delete broadphase;
@@ -326,14 +341,97 @@ namespace octet { namespace scene {
           if (is_dynamic) shape->calculateLocalInertia(mass, inertiaTensor);
     
           btRigidBody * rigid_body = new btRigidBody(mass, motionState, shape, inertiaTensor);
-          world->addRigidBody(rigid_body);
-          rigid_body->setUserPointer(node);
-          node->set_rigid_body(rigid_body);
+          world->addRigidBody(rigid_body); //add rigid_body to our stack (world) of rigid bodies (*btRigidBody's)
+		  bodies.push_back(new btObject(rigid_body, b));
+		  b++;
+          rigid_body->setUserPointer(node); // arrange our rigid body to work in bullet?
+          node->set_rigid_body(rigid_body); // arrange our rigid body to work in octet ?
         }
       #endif
       return result;
     }
+#ifdef OCTET_BULLET
+	void add_Hinge(){
+				
+		const btVector3 btPivotA(1.5f, -1.5f, 0.0f);
+		btVector3 btAxisA(0.0f, 1.0f, 0.0f);
+		btHingeConstraint* ObjectHinge;
+		ObjectHinge = new btHingeConstraint(*(bodies[2]->body), btPivotA, btAxisA);
+		world->addConstraint(ObjectHinge);
 
+		
+	}
+
+	void add_Spring(){
+		btTransform btrans;
+		btrans.setIdentity();
+		btrans.setOrigin(btVector3(btScalar(0.), btScalar(5.), btScalar(0.)));
+		btrans.getBasis().setEulerZYX(0, 0, 0);
+
+		btGeneric6DofSpringConstraint* ObjectSpring;
+		ObjectSpring = new btGeneric6DofSpringConstraint(*(bodies[0]->body), btrans, true);
+
+		ObjectSpring->setLinearUpperLimit(btVector3(0., 10., 0.));
+		ObjectSpring->setLinearLowerLimit(btVector3(0.,  -10., 0.));
+
+		ObjectSpring->setAngularLowerLimit(btVector3(0.f, 0.f, 0.f));
+		ObjectSpring->setAngularUpperLimit(btVector3(0.f, 0.f, 0.f));
+
+		world->addConstraint(ObjectSpring);
+
+		ObjectSpring->enableSpring(1, true);
+		ObjectSpring->setStiffness(1, 5.f);
+		ObjectSpring->setDamping(1, 1.f);
+		ObjectSpring->setEquilibriumPoint(1);
+
+	}
+
+#endif
+
+	mesh_instance *add_shape_ndHinge(mat4t_in mat, mesh *msh, material *mtl, bool is_dynamic = false, float mass = 1, collison_shape_t *shape = NULL) {
+		scene_node *node = new scene_node(this);
+		node->access_nodeToParent() = mat;
+
+		mesh_instance *result = NULL;
+		if (msh && mtl) {
+			result = new mesh_instance(node, msh, mtl);
+			add_mesh_instance(result);
+		}
+
+#ifdef OCTET_BULLET
+		btMatrix3x3 matrix(get_btMatrix3x3(mat));
+		btVector3 pos(get_btVector3(mat[3].xyz()));
+
+		if (shape == NULL) {
+			shape = is_dynamic ? msh->get_bullet_shape() : msh->get_static_bullet_shape();
+		}
+
+		if (shape) {
+			btTransform transform(matrix, pos);
+
+			btDefaultMotionState *motionState = new btDefaultMotionState(transform);
+			btVector3 inertiaTensor;
+//Hinge:
+			const btVector3 btPivotA(1.5f, -1.5f, 0.0f);
+			btVector3 btAxisA(0.0f, 1.0f, 0.0f);
+			btHingeConstraint* ObjectHinge;
+
+			if (!is_dynamic) mass = 0;
+
+			if (is_dynamic) shape->calculateLocalInertia(mass, inertiaTensor);
+
+			btRigidBody * rigid_body = new btRigidBody(mass, motionState, shape, inertiaTensor);
+//add Hinge constraint:
+			ObjectHinge = new btHingeConstraint(*rigid_body, btPivotA, btAxisA);
+			world->addConstraint(ObjectHinge);
+
+			world->addRigidBody(rigid_body); //add rigid_body to our stack (world) of rigid bodies (btRigidBody's)
+			rigid_body->setUserPointer(node); // arrange our rigid body to work in bullet?
+			node->set_rigid_body(rigid_body); // arrange our rigid body to work in octet ?
+		}
+#endif
+		return result;
+	}
     /// Serialization
     void visit(visitor &v) {
       scene_node::visit(v);

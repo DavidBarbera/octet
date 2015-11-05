@@ -6,15 +6,15 @@
 //
 namespace octet {
   /// Scene containing a box with octet.
-  class example_shapes : public app {
+  class example_shapes2 : public app {
     // scene for drawing box
     ref<visual_scene> app_scene;
 
   public:
-    example_shapes(int argc, char **argv) : app(argc, argv) {
+    example_shapes2(int argc, char **argv) : app(argc, argv) {
     }
 
-    ~example_shapes() {
+    ~example_shapes2() {
     }
 
     /// this is called once OpenGL is initialized
