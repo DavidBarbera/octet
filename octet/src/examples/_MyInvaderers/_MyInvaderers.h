@@ -170,13 +170,13 @@ namespace octet {
 			last_invaderer_sprite = first_invaderer_sprite + num_invaderers - 1,
 
 			n_missile_sprite,
-			s_missile_sprite,
-			e_missile_sprite,
-			w_missile_sprite,
-			ne_missile_sprite,
-			nw_missile_sprite,
-			sw_missile_sprite,
-			se_missile_sprite,
+			s_missile_sprite = n_missile_sprite + num_missiles,
+			e_missile_sprite = s_missile_sprite + num_missiles,
+			w_missile_sprite = e_missile_sprite + num_missiles,
+			ne_missile_sprite = w_missile_sprite + num_missiles,
+			nw_missile_sprite = ne_missile_sprite + num_missiles,
+			sw_missile_sprite = nw_missile_sprite + num_missiles,
+			se_missile_sprite = sw_missile_sprite + num_missiles,
 			//last_missile_sprite = n_missile_sprite + num_missiles - 1,
 
 			first_bomb_sprite,
@@ -306,18 +306,21 @@ namespace octet {
 		}
 
 		// fire button (space)
-		void set_missile(float x, float y, int i){
-			if (!sprites[n_missile_sprite + i].is_enabled()) {
-				sprites[n_missile_sprite + i].set_relative(sprites[ship_sprite], x, y);
-				sprites[n_missile_sprite + i].is_enabled() = true;
-				ALuint source = get_sound_source();
-				alSourcei(source, AL_BUFFER, whoosh);
-				alSourcePlay(source);
-			}
+		void set_missile(float x, float y, int k){
+			//for (int i = 0; i != num_missiles; ++i) {
+			//	if (!sprites[n_missile_sprite +num_missiles*k + i].is_enabled()) {
+					sprites[n_missile_sprite + num_missiles*k  ].set_relative(sprites[ship_sprite], x, y);
+					sprites[n_missile_sprite + num_missiles*k  ].is_enabled() = true;
+					ALuint source = get_sound_source();
+					alSourcei(source, AL_BUFFER, whoosh);
+					alSourcePlay(source);
+					//break;
+				//}
+			//}
 		}
 
 		void fire_missiles() {
-			float u = 0.5f;
+			float u = 0.25f;
 
 			if (is_key_going_down(key_e) && is_key_going_down(key_f)) {
 				set_missile(u, u, NE);
@@ -348,7 +351,7 @@ namespace octet {
 									}
 									else {
 										if (is_key_going_down(key_f)) {
-											set_missile(u, 0, S);
+											set_missile(u, 0, E);
 										}
 									}
 								}
@@ -356,7 +359,7 @@ namespace octet {
 						}
 					}
 				}
-			}
+			} 
 			
 		}
 
@@ -390,7 +393,7 @@ namespace octet {
 		}
 
 		void animate_missile(float x, float y, int i) {
-			sprite &missile = sprites[n_missile_sprite + i];
+			sprite &missile = sprites[n_missile_sprite + i*num_missiles];
 			if (missile.is_enabled()) {
 				missile.translate(x,y);
 				for (int j = 0; j != num_invaderers; ++j) {
@@ -416,7 +419,7 @@ namespace octet {
 		// animate the missiles
 		void move_missiles() {
 			const float missile_speed = 0.3f;
-			for (int i = 0; i != 8; ++i) {
+			for (int i = 0; i != 8 ; ++i) {
 				switch (i){
 				case N: 
 					animate_missile( 0 , missile_speed ,  i);
@@ -567,10 +570,12 @@ namespace octet {
 
 			// use the missile texture
 			GLuint missile = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/missile.gif");
-			for (int i = 0; i != 8; ++i) {
-				// create missiles off-screen
-				sprites[n_missile_sprite + i].init(missile, 20, 0, 0.0625f, 0.25f);
-				sprites[n_missile_sprite + i].is_enabled() = false;
+			for (int i = 0; i != num_missiles; ++i) {
+				for (int j = 0; j != 8; ++j) {
+					// create missiles off-screen
+					sprites[n_missile_sprite +j*num_missiles+ i].init(missile, 20, 0, 0.0625f, 0.25f);
+					sprites[n_missile_sprite +j*num_missiles+ i].is_enabled() = false;
+				}
 			}
 
 			// use the bomb texture
