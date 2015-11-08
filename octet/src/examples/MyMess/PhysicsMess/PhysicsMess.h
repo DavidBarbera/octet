@@ -47,7 +47,7 @@ namespace octet {
 
 			mat.loadIdentity();
 			mat.translate(2, 6, 0);
-			app_scene->add_shape(mat, new mesh_cylinder(zcylinder(vec3(0, 0, 0), 1, 4)), blue, true);
+			app_scene->add_shape(mat, new mesh_cylinder(zcylinder(vec3(0, 0, 0), 3, 4)), blue, true);
 
 			// ground
 			mat.loadIdentity();
