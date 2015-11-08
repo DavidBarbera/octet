@@ -1,9 +1,11 @@
 Introduction to Games Programming
+Examples\_MyInvaderers
 Tools and Middleware
+Examples\MyMess\PhysicsMess
 
 Reports:
 Introduction to Games Programming
-name of the project: _MyInvaderers
+name of the project:exampes\ _MyInvaderers
 
 I have been working on the invaderers example provided and my intention was developing a game based on the Sprite class. One of the main challenges was to give additional functionality to the space ship. I wanted to give the ability to move faster and in 2D, not just at the bottom of the screen. It took me a while to find the parts of the Octet that govern control over the keyboard. I found it in app_common.h. Using is_key_down() and cumbersome if-else statements to apply translation on the proper direction I managed to achieve it. I used defined constants N,S,E,W,NE,NW,SE,SW to make easier to know where I was assigning the translations to North, South, East, West, North East, North West, South East and South West directions from the current space ship position. Speed was just increased using the variable ship_speed.
 
