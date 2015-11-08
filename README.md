@@ -15,8 +15,9 @@ Another functionality I wanted to add was a more dynamic movement of the invader
 Next challenge, I set up was to write a fragment shader. And here is where I got stuck most of the time, I manage to give some colour to the textures but I needed more technical practice in shading language. I would have added a second texture to play with relieve and make the sprites of the game more “3D”-like. I found it too complicated so, I was going to decide to change the whole structure of the game to have less characters and not based on Sprites but just game objects on scene using add_shapes() where it would be easier for me to write different fragment shaders for each game objet type. There are examples in Octet that are quite clear. But I honestly run out of time.
  I sincerely apologise for my underperformance, I haven’t been able to code my whole idea on the assignment but just a functional version of the invaderers meant just to be a practice to export functionality to my own game.
 <br/>
+<a href="https://www.youtube.com/watch?v=GTaingXDKwE&feature=youtu.be"> YouTube viewing of the game</a>
 <br/>
-
+<br/>
 <h2>Tools and Middleware</h2>
 <h2>Name of the project: PhysicsMess</h2>
 <h2>in \example\MyMess folder</h2>
@@ -31,6 +32,7 @@ Next challenge was to be able to access rigid bodies once created with add_shape
 My next step was intended to understand how to use keyboard and mouse to go around the world uploaded from the file. Once that done, implement a process of shooting spheres from the player point of view and use collision callbacks to execute certain processes once collision happen. One of these processes could be adding sound, or explore even further constraints trying to disable constraints if my shooting sphere collides with a certain rigid body under some form of constraint. It would have been nice as well to implement a Voronoi fracture of some of the rigid bodies.
 I enjoyed this assignment very much but my frustration has come from a lack of time due to personal reasons. I haven’t been able to code all my learning and therefore my performance in this assignment is way under my usual standard. I sincerely apologise.<br/>
 <br/>
+<a href="https://www.youtube.com/watch?v=0bXh2jKwvng&feature=youtu.be"> YouTube viewing of the demo</a>
 
 
 
