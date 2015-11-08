@@ -4,15 +4,15 @@
 //
 namespace octet {
 	/// Scene containing a box with octet.
-	class _PhysicsDemo : public app {
+	class PhysicsMess : public app {
 		// scene for drawing box
 		ref<visual_scene> app_scene;
 
 	public:
-		_PhysicsDemo(int argc, char **argv) : app(argc, argv) {
+		PhysicsMess(int argc, char **argv) : app(argc, argv) {
 		}
 
-		~_PhysicsDemo() {
+		~PhysicsMess() {
 		}
 
 		/// this is called once OpenGL is initialized
@@ -50,10 +50,10 @@ namespace octet {
 
 			app_scene->add_Hinge();
 			app_scene->add_Spring();
+			
 
-
-
-			//constraints
+			
+	//constraints
 			//whatever
 			// app_scene->world->getGravity;
 
