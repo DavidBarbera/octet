@@ -426,7 +426,7 @@ namespace octet {
 			GLuint GameOver = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/GameOver.gif");
 			sprites[game_over_sprite].init(GameOver, 20, 0, 3, 1.5f);
 
-			GLuint invaderer = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/invaderer.gif");
+			GLuint invaderer = resource_dict::get_texture_handle(GL_RGBA, "assets/_myinvaderers/invade.gif");
 		//	for (int j = 0; j != num_rows; ++j) {
 		//		for (int i = 0; i != num_cols; ++i) {
 					//assert(first_invaderer_sprite + i + j*num_cols <= last_invaderer_sprite);
@@ -444,7 +444,7 @@ namespace octet {
 			sprites[first_border_sprite + 3].init(white, 3, 0, 0.2f, 6);
 
 			// use the missile texture
-			GLuint missile = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/missile.gif");
+			GLuint missile = resource_dict::get_texture_handle(GL_RGBA, "assets/_myinvaderers/bomb.gif");
 			for (int i = 0; i != num_missiles; ++i) {
 				for (int j = 0; j != 8; ++j) {
 					// create missiles off-screen
@@ -454,7 +454,7 @@ namespace octet {
 			}
 
 			// use the bomb texture
-			GLuint bomb = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/bomb.gif");
+			GLuint bomb = resource_dict::get_texture_handle(GL_RGBA, "assets/_myinvaderers/Rocket.gif");
 			for (int i = 0; i != num_bombs; ++i) {
 				// create bombs off-screen
 				sprites[first_bomb_sprite + i].init(bomb, 20, 0, 0.0625f, 0.25f);
@@ -487,11 +487,11 @@ namespace octet {
 
 			fire_missiles();
 
-			//fire_bombs();
+			fire_bombs();
 
 			move_missiles();
 
-			//move_bombs();
+			move_bombs();
 
 			move_invaders(invader_velocity, 0);
 

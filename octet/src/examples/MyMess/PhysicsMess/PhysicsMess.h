@@ -2,6 +2,12 @@
 //
 // testing assumptions
 //
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+
+#define FILE "../../../examples/MyMess/PhysicsMess/file.csv"
 namespace octet {
 	/// Scene containing a box with octet.
 	class PhysicsMess : public app {
@@ -29,11 +35,11 @@ namespace octet {
 
 			mat4t mat;
 			mat.translate(0, 15, 0);
-			app_scene->add_shape(mat, new mesh_sphere(vec3(2, 3, 2), 2), colorX, true);
+			app_scene->add_shape(mat, new mesh_sphere(vec3(0, 0, 0), 1), colorX, true);
 			//another sphere
 			mat.loadIdentity();
 			mat.translate(3, 7, 0);
-			app_scene->add_shape(mat, new mesh_sphere(vec3(2, 2, 2), 2), blue, true);
+			app_scene->add_shape(mat, new mesh_sphere(vec3(0, 0, 0), 2), blue, true);
 
 			mat.loadIdentity();
 			mat.translate(0, 4, 0);
@@ -41,7 +47,7 @@ namespace octet {
 
 			mat.loadIdentity();
 			mat.translate(2, 6, 0);
-			app_scene->add_shape(mat, new mesh_cylinder(zcylinder(vec3(0, 0, 0), 2, 4)), blue, true);
+			app_scene->add_shape(mat, new mesh_cylinder(zcylinder(vec3(0, 0, 0), 1, 4)), blue, true);
 
 			// ground
 			mat.loadIdentity();
@@ -51,7 +57,7 @@ namespace octet {
 			app_scene->add_Hinge();
 			app_scene->add_Spring();
 			
-
+			//read_file();
 			
 	//constraints
 			//whatever
@@ -60,7 +66,68 @@ namespace octet {
 
 
 		}
+		struct Object {
+			int id;
+			char shape[25];
+			vec3 dimension;
+			vec3 position;
+			vec3 color;
+					};
+		int read_file(){
+			//std::vector<std::string> names;
+			//std::vector<Object> objects[20];
+			Object object;
 
+			std::ifstream is(FILE);
+			//printf("hello hey");
+			if (is.bad()) return 1;
+
+
+			// store the line here
+			char buffer[2048];
+			char field[25];
+
+			// loop over lines
+			
+			while (!is.eof()) {
+				is.getline(buffer, sizeof(buffer));
+				//printf("\n%s\n",buffer);
+				
+
+				// loop over columns
+				char *b = buffer;
+				int i = 0;
+				for (int col = 0;col<=10; col++) {
+					char *e = b;
+						
+					while (*e != 0 && *e != ';') {
+						field[i]=b[i];
+						++e; i++;
+					}
+					field[i] = '\0';
+					// now b -> e contains the chars in a column
+					switch (col) {
+						case 0:      //names.emplace_back(b, e);
+							
+						object.id = atoi(field);
+						printf("%i\n", object.id);
+						break;
+						case 1: 
+							strcpy(object.shape, field);
+							printf("%s\n", object.shape);
+							break;
+						default:
+							break;
+							
+					}
+
+					if (*e != ',') break;
+					b = e + 1;
+				}
+				// add shapes here
+				}
+			}
+		
 		/// this is called to draw the world
 		void draw_world(int x, int y, int w, int h) {
 			int vx = 0, vy = 0;

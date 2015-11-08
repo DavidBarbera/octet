@@ -46,7 +46,7 @@ namespace octet { namespace shaders {
 	  uniform sampler2D sampler;			
 	  void main() { 
 			  
-		  gl_FragColor = vec4( 1, 0, 0, 1)*texture2D(sampler, uv_);}
+		  gl_FragColor = vec4( 1, 0.5, 1, 1)*texture2D(sampler, uv_);}
 	  );
 
 	
