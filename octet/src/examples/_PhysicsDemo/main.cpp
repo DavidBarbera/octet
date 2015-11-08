@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 //
 // (C) Andy Thomason 2012-2014
 //
@@ -8,9 +8,9 @@
 #pragma warning(disable : 4267)
 #define OCTET_BULLET 1
 
-#include "../../../octet.h"
+#include "../../octet.h"
 
-#include "PhysicsMess.h"
+#include "_PhysicsDemo.h"
 
 /// Create a box with octet
 int main(int argc, char **argv) {
@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
 	octet::app::init_all(argc, argv);
 
 	// our application.
-	octet::PhysicsMess app(argc, argv);
+	octet::_PhysicsDemo app(argc, argv);
 	app.init();
 
 	// open windows
