@@ -7,12 +7,11 @@
 // Text overlay
 //
 
-#pragma warning(disable : 4267)
 #define OCTET_BULLET 1
 
-#include "../../../octet.h"
+#include "../../octet.h"
 
-#include "example_shapes.h"
+#include "_PhysicsDemo.h"
 
 /// Create a box with octet
 int main(int argc, char **argv) {
@@ -20,7 +19,7 @@ int main(int argc, char **argv) {
   octet::app::init_all(argc, argv);
 
   // our application.
-  octet::example_shapes app(argc, argv);
+  octet::_PhysicsDemo app(argc, argv);
   app.init();
 
   // open windows
