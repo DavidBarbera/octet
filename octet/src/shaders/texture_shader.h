@@ -23,16 +23,17 @@ namespace octet { namespace shaders {
       // it inputs pos and uv from each corner
       // it outputs gl_Position and uv_ to the rasterizer
      const char vertex_shader[] = SHADER_STR(
-        varying vec2 c;
-	
-        attribute vec4 pos;
-        attribute vec2 uv;
+		 // attributes from vertex buffer
+		 attribute vec4 pos;
+	     attribute vec2 uv;
 
-        uniform mat4 modelToProjection;
+	    // outputs
+     	 varying vec2 uv_;
+		
 
-        void main() { 
-			
-			gl_Position = modelToProjection * pos; c=uv; }
+	    uniform mat4 modelToProjection;
+
+		void main() {  gl_Position = modelToProjection * pos; uv_ = uv; }
       );
 
       // this is the fragment shader
@@ -40,9 +41,12 @@ namespace octet { namespace shaders {
       // this is called for every fragment
       // it outputs gl_FragColor, the color of the pixel and inputs uv_
 	  const char fragment_shader[] = SHADER_STR(
-		    varying vec2 c;
-		    uniform sampler2D sampler;			
-			void main() { gl_FragColor = vec4(1., 0., 0., 0.5)*texture2D(sampler, c); }
+	  varying vec2 uv_;
+	 
+	  uniform sampler2D sampler;			
+	  void main() { 
+			  
+		  gl_FragColor = vec4( 1, 0, 0, 1)*texture2D(sampler, uv_);}
 	  );
 
 	
