@@ -7,6 +7,9 @@
 // Mesh smooth modifier. Work in progress.
 //
 
+#define PRODUCTION "F[+F]F[-F]F"
+#define DELTA 25.7
+
 namespace octet { namespace scene {
   /// Box mesh. Generate triangles for an AABB.
   class mesh_box : public mesh {

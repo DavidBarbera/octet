@@ -3,7 +3,13 @@
 // (C) Andy Thomason 2012-2014
 //
 // Modular Framework for OpenGLES2 rendering on multiple platforms.
-//
+
+#include <stdio.h>
+
+#define PRODUCTION "F[+F]F[-F]F"
+#define DELTA 25.7
+
+
 namespace octet {
   /// Scene containing a box with octet.
   class LSystem : public app {
@@ -20,10 +26,15 @@ namespace octet {
       app_scene->create_default_camera_and_lights();
 
       material *red = new material(vec4(1, 0, 0, 1));
-      mesh_box *box = new mesh_box(vec3(4));
+      mesh_box *box = new mesh_box(vec3(0.1f,4.0f,0.1f));
       scene_node *node = new scene_node();
       app_scene->add_child(node);
       app_scene->add_mesh_instance(new mesh_instance(node, box, red));
+	 // printf("%s", PRODUCTION);
+
+	 // vec3 pos= app_scene->get_mesh_instance(0)->get_node()->get_position();
+
+	  //printf("( %i , %i , %i )", pos.x(), pos().y(), pos.()z);
     }
 
     /// this is called to draw the world
@@ -39,9 +50,9 @@ namespace octet {
       app_scene->render((float)vx / vy);
 
       // tumble the box  (there is only one mesh instance)
-      scene_node *node = app_scene->get_mesh_instance(0)->get_node();
-      node->rotate(1, vec3(1, 0, 0));
-      node->rotate(1, vec3(0, 1, 0));
-    }
+     // scene_node *node = app_scene->get_mesh_instance(0)->get_node();
+      //node->rotate(1, vec3(1, 0, 0));
+     // node->rotate(1, vec3(1, 1, 0));
+	}
   };
 }

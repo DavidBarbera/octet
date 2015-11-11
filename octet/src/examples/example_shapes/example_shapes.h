@@ -4,6 +4,13 @@
 //
 // Modular Framework for OpenGLES2 rendering on multiple platforms.
 //
+
+#include <stdio.h>
+
+
+#define PRODUCTION "F[+F]F[-F]F"
+#define DELTA 25.7
+
 namespace octet {
   /// Scene containing a box with octet.
   class example_shapes : public app {
