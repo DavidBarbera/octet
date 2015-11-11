@@ -86,7 +86,7 @@ namespace octet {
       app_scene->get_camera_instance(0)->set_far_plane(20000);
       app_scene->get_camera_instance(0)->set_near_plane(1);
 
-      material *mat = new material(new image("assets/roads.gif"));
+      material *mat = new material(new image("assets/stars.gif"));
 
       geom = new mesh(0x10000, 0x10000);
       //geom->set_mode(GL_LINES);

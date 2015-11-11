@@ -4,6 +4,7 @@
 //
 // Modular Framework for OpenGLES2 rendering on multiple platforms.
 //
+
 namespace octet {
   /// Scene containing a box with octet.
   class example_fps : public app {
