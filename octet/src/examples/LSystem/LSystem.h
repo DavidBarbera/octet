@@ -7,105 +7,150 @@
 #include <stdio.h>
 
 #define PRODUCTION "F[+F]F[-F]F"
-#define DELTA 25.7
-
+#define ANGLE 45
+#define PI 3.1415926535897932384626433832795028841971693993751
+#define RANGLE ANGLE*PI/180
 
 namespace octet {
   /// Scene containing a box with octet.
-  class LSystem : public app {
-    // scene for drawing box
-    ref<visual_scene> app_scene;
-	mouse_look mouse_look_helper;
-	ref<camera_instance> the_camera;
-	// helper for drawing text
-	ref<text_overlay> overlay;
+	class LSystem : public app {
+		// scene for drawing box
+		ref<visual_scene> app_scene;
 
-	// text mesh object for overlay.
-	ref<mesh_text> text;
-  public:
-    /// this is called when we construct the class before everything is initialised.
-    LSystem(int argc, char **argv) : app(argc, argv) {
-    }
+		//- mouse_look mouse_look_helper;
+		ref<camera_instance> the_camera;
 
-    /// this is called once OpenGL is initialized
-    void app_init() {
-		mouse_look_helper.init(this, 200.0f / 360.0f, false);
-      app_scene =  new visual_scene();
-      app_scene->create_default_camera_and_lights();
-	  the_camera = app_scene->get_camera_instance(0);
-	  the_camera->get_node()->translate(vec3(0, 4, 0));
-	  the_camera->set_far_plane(10000);
+		// helper for drawing text
+		ref<text_overlay> overlay;
+		// text mesh object for overlay.
+		ref<mesh_text> text;
 
-      material *red = new material(vec4(1, 0, 0, 1));
-      mesh_box *box = new mesh_box(vec3(0.1f,4.0f,0.1f));
-      scene_node *node = new scene_node();
-      app_scene->add_child(node);
-      app_scene->add_mesh_instance(new mesh_instance(node, box, red));
-	 // printf("%s", PRODUCTION);
+		float halflength=2;
+		float thickness = 0.10f;
 
-	 // vec3 pos= app_scene->get_mesh_instance(0)->get_node()->get_position();
+	public:
+		/// this is called when we construct the class before everything is initialised.
+		LSystem(int argc, char **argv) : app(argc, argv) {
+		}
 
-	  //printf("( %i , %i , %i )", pos.x(), pos().y(), pos.()z);
+		/// this is called once OpenGL is initialized
+		void app_init() {
+			//-	mouse_look_helper.init(this, 200.0f / 360.0f, false);
+			app_scene = new visual_scene();
+			app_scene->create_default_camera_and_lights();
 
-	  // create the overlay
-	  overlay = new text_overlay();
+			the_camera = app_scene->get_camera_instance(0);
+			the_camera->get_node()->translate(vec3(0, 4, 0));
+			the_camera->set_far_plane(10000);
 
-	  // get the default font.
-	  bitmap_font *font = overlay->get_default_font();
+			material *bark = new material(vec4(0.686f, 0.3412f, 0, 1));
+			material *bark2 = new material(vec4(0.627f, 0.3803f, 0.0549f, 1));
+			mat4t mat;
+			mat.loadIdentity();
+			mat.rotate(90.0f, 1, 0, 0);
+			mesh_cylinder *branch = new mesh_cylinder((zcylinder(vec3(0, 0, 0), thickness, halflength)),mat);
+			mesh_cylinder *branch2 = new mesh_cylinder((zcylinder(vec3(0, 0, 0), thickness, halflength)),mat);
 
-	  // create a box containing text (in pixels)
-	  aabb bb(vec3(64.5f, -200.0f, 0.0f), vec3(256, 64, 0));
-	  text = new mesh_text(font, "", &bb);
+			scene_node *node = new scene_node();
+			scene_node *node2 = new scene_node();
+			app_scene->add_child(node);
+			app_scene->add_child(node2);
+			app_scene->add_mesh_instance(new mesh_instance(node, branch, bark));
+			app_scene->add_mesh_instance(new mesh_instance(node2, branch2, bark2));
 
-	  // add the mesh to the overlay.
-	  overlay->add_mesh_text(text);
+			//position the branch
+			node = app_scene->get_mesh_instance(0)->get_node();
+			//node->rotate(90, vec3(1, 0, 0));
+			
+			node2 = app_scene->get_mesh_instance(1)->get_node();
+			//node2->loadIdentity();
+			//node2->rotate(90, vec3(0, 0, 1));
+			//node2->loadIdentity();
+			//node2->rotate(ANGLE, vec3(1, 0, 0));
+			//snode2->loadIdentity();
 
-    }
+			//node2->translate(vec3(0, -1, -1));
+			//node2->translate(vec3(1 * halflength*0.5*sin((ANGLE+90)*PI/180), halflength+halflength*0.5*cos((ANGLE+90)*PI/180), 0));
+			//node2->loadIdentity();
+			//node2->translate(vec3(1, (1.5*halflength), 0));
+			//node2->translate(vec3( (1.5*halflength)*cos((ANGLE+90 )*PI / 180), (1.5*halflength)*sin((ANGLE+90)*PI / 180),0));
+			//node2->rotate(ANGLE, vec3(0, 1, 0));
+			//node2->translate(vec3(0,1.5* halflength, 0));
+			//node2->rotate(ANGLE, vec3(0, 0, 1));
+			
+			//node2->loadIdentity();
+			node2->translate(vec3(halflength*cos((ANGLE + 90)*PI / 180),halflength+halflength*sin((ANGLE + 90)*PI / 180),0));
+			node2->rotate(ANGLE, vec3(0, 0, 1));
+			//node2->translate(vec3(halflength*0.25*, halflength*1.5, 0));
+			
+			// printf("%s", PRODUCTION);
 
-    /// this is called to draw the world
-    void draw_world(int x, int y, int w, int h) {
-      int vx = 0, vy = 0;
-      get_viewport_size(vx, vy);
-      app_scene->begin_render(vx, vy);
+			// vec3 pos= app_scene->get_mesh_instance(0)->get_node()->get_position();
 
-	  scene_node *camera_node = the_camera->get_node();
-	  mat4t &camera_to_world = camera_node->access_nodeToParent();
-	  mouse_look_helper.update(camera_to_world);
+			 //printf("( %i , %i , %i )", pos.x(), pos().y(), pos.()z);
 
-      // update matrices. assume 30 fps.
-      app_scene->update(1.0f/30);
+			 // create the overlay
+			overlay = new text_overlay();
 
-      // draw the scene
-      app_scene->render((float)vx / vy);
+			// get the default font.
+			bitmap_font *font = overlay->get_default_font();
 
-      // tumble the box  (there is only one mesh instance)
-      scene_node *node = app_scene->get_mesh_instance(0)->get_node();
-      node->rotate(1, vec3(1, 0, 0));
-     // node->rotate(1, vec3(1, 1, 0));
+			// create a box containing text (in pixels)
+			aabb bb(vec3(64.5f, -200.0f, 0.0f), vec3(256, 64, 0));
+			text = new mesh_text(font, "", &bb);
 
+			// add the mesh to the overlay.
+			overlay->add_mesh_text(text);
 
-	 // write some text to the overlay
-	  char buf[3][256];
-	  const mat4t &mx = node->access_nodeToParent();
+		}
 
-	  text->clear();
+		/// this is called to draw the world
+		void draw_world(int x, int y, int w, int h) {
+			int vx = 0, vy = 0;
+			get_viewport_size(vx, vy);
+			app_scene->begin_render(vx, vy);
 
-	  text->format(
-		  "matrix x: %s\n"
-		  "matrix y: %s\n"
-		  "matrix z: %s\n",
-		  mx.x().toString(buf[0], sizeof(buf[0])),
-		  mx.y().toString(buf[1], sizeof(buf[1])),
-		  mx.z().toString(buf[2], sizeof(buf[2]))
-		  );
+			scene_node *camera = the_camera->get_node();
+			//mat4t &camera = camera_node->access_nodeToParent();
+			//- mouse_look_helper.update(camera_to_world);
 
-	  // convert it to a mesh.
-	  text->update();
+			// update matrices. assume 30 fps.
+			app_scene->update(1.0f / 30);
 
-	  // draw the text overlay
-	  overlay->render(vx, vy);
+			// draw the scene
+			app_scene->render((float)vx / vy);
+
+			// tumble the branch  (there is only one mesh instance)
+			scene_node *node = app_scene->get_mesh_instance(1)->get_node();
+			// node->rotate(1, vec3(0, 0, 1));
+			// node->rotate(1, vec3(1, 1, 0));
 
 
-	}
+			// write some text to the overlay
+			char buf[3][256];
+			const mat4t &mx = node->access_nodeToParent();
+
+			text->clear();
+
+			text->format(
+				"matrix x: %s\n"
+				"matrix y: %s\n"
+				"matrix z: %s\n",
+				mx.x().toString(buf[0], sizeof(buf[0])),
+				mx.y().toString(buf[1], sizeof(buf[1])),
+				mx.z().toString(buf[2], sizeof(buf[2]))
+				);
+
+			// convert it to a mesh.
+			text->update();
+
+			// draw the text overlay
+			overlay->render(vx, vy);
+
+
+
+
+
+		}
   };
 }
