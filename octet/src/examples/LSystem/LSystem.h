@@ -25,6 +25,8 @@ namespace octet {
 		// text mesh object for overlay.
 		ref<mesh_text> text;
 
+		dynarray<ref<scene_node>> branches;
+
 		float halflength=2;
 		float thickness = 0.10f;
 
@@ -69,20 +71,35 @@ namespace octet {
 			//node2->rotate(ANGLE, vec3(1, 0, 0));
 			//snode2->loadIdentity();
 
-			//node2->translate(vec3(0, -1, -1));
-			//node2->translate(vec3(1 * halflength*0.5*sin((ANGLE+90)*PI/180), halflength+halflength*0.5*cos((ANGLE+90)*PI/180), 0));
-			//node2->loadIdentity();
-			//node2->translate(vec3(1, (1.5*halflength), 0));
-			//node2->translate(vec3( (1.5*halflength)*cos((ANGLE+90 )*PI / 180), (1.5*halflength)*sin((ANGLE+90)*PI / 180),0));
-			//node2->rotate(ANGLE, vec3(0, 1, 0));
-			//node2->translate(vec3(0,1.5* halflength, 0));
-			//node2->rotate(ANGLE, vec3(0, 0, 1));
-			
 			//node2->loadIdentity();
 			node2->translate(vec3(halflength*cos((ANGLE + 90)*PI / 180),halflength+halflength*sin((ANGLE + 90)*PI / 180),0));
 			node2->rotate(ANGLE, vec3(0, 0, 1));
 			//node2->translate(vec3(halflength*0.25*, halflength*1.5, 0));
+			mesh_cylinder *branch3 = new mesh_cylinder((zcylinder(vec3(0, 0, 0), thickness, halflength)), mat);
+			scene_node *node3 = new scene_node();
+			app_scene->add_child(node3);
+			app_scene->add_mesh_instance(new mesh_instance(node3, branch3, bark));
+			node3 = app_scene->get_mesh_instance(2)->get_node();
 			
+			node3->translate(vec3(0, 2 * halflength, 0));
+
+			mesh_cylinder *branch4 = new mesh_cylinder((zcylinder(vec3(0, 0, 0), thickness, halflength)), mat);
+			scene_node *node4 = new scene_node();
+			app_scene->add_child(node4);
+			app_scene->add_mesh_instance(new mesh_instance(node4, branch4, bark));
+			node4 = app_scene->get_mesh_instance(3)->get_node();
+			
+			node4->translate(vec3(halflength*cos((-1*ANGLE + 90)*PI / 180), 3*halflength + halflength*sin((-1*ANGLE + 90)*PI / 180), 0));
+			node4->rotate(-1 * ANGLE, vec3(0, 0, 1));
+
+			mesh_cylinder *branch5 = new mesh_cylinder((zcylinder(vec3(0, 0, 0), thickness, halflength)), mat);
+			scene_node *node5 = new scene_node();
+			app_scene->add_child(node5);
+			app_scene->add_mesh_instance(new mesh_instance(node5, branch5, bark));
+			node5 = app_scene->get_mesh_instance(4)->get_node();
+
+			node5->translate(vec3(0, 4 * halflength, 0));
+
 			// printf("%s", PRODUCTION);
 
 			// vec3 pos= app_scene->get_mesh_instance(0)->get_node()->get_position();
