@@ -86,7 +86,9 @@ namespace octet { namespace containers {
 
     /// destructor - remove a reference rom the object, may free the object.
     ~ref() {
-      if (item) item->release();
+
+		
+		if (item) item->release();
       item = 0;
     }
   };

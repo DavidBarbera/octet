@@ -35,11 +35,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\..\helpers\http_server.h">
       <Filter>helpers</Filter>
     </ClInclude>
@@ -428,6 +423,7 @@
       <Filter>containers</Filter>
     </ClInclude>
     <ClInclude Include="LSystem.h" />
+    <ClInclude Include="Turtle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\resources\mesh_builder.inl">
@@ -436,5 +432,10 @@
     <None Include="..\..\resources\resources.inl">
       <Filter>resources</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
