@@ -19,6 +19,7 @@ namespace octet {
 
 		//- mouse_look mouse_look_helper;
 		ref<camera_instance> the_camera;
+		mouse_ball mcamera;
 
 		// helper for drawing text
 		ref<text_overlay> overlay;
@@ -35,24 +36,15 @@ namespace octet {
 		LSystem(int argc, char **argv) : app(argc, argv) {
 		}
 
-		/// this is called once OpenGL is initialized
-		void app_init() {
-			//-	mouse_look_helper.init(this, 200.0f / 360.0f, false);
-			app_scene = new visual_scene();
-			app_scene->create_default_camera_and_lights();
-
-			the_camera = app_scene->get_camera_instance(0);
-			the_camera->get_node()->translate(vec3(0, 4, 0));
-			the_camera->set_far_plane(10000);
+		void tests() {
 
 			material *bark = new material(vec4(0.686f, 0.3412f, 0, 1));
 			material *bark2 = new material(vec4(0.627f, 0.3803f, 0.0549f, 1));
 			mat4t mat;
 			mat.loadIdentity();
 			mat.rotate(90.0f, 1, 0, 0);
-			mesh_cylinder *branch = new mesh_cylinder((zcylinder(vec3(0, 0, 0), thickness, halflength)),mat);
-			mesh_cylinder *branch2 = new mesh_cylinder((zcylinder(vec3(0, 0, 0), thickness, halflength)),mat);
-
+			mesh_cylinder *branch = new mesh_cylinder((zcylinder(vec3(0, 0, 0), thickness, halflength)), mat);
+			mesh_cylinder *branch2 = new mesh_cylinder((zcylinder(vec3(0, 0, 0), thickness, halflength)), mat);
 			scene_node *node = new scene_node();
 			scene_node *node2 = new scene_node();
 			app_scene->add_child(node);
@@ -60,27 +52,23 @@ namespace octet {
 			app_scene->add_mesh_instance(new mesh_instance(node, branch, bark));
 			app_scene->add_mesh_instance(new mesh_instance(node2, branch2, bark2));
 
-			//position the branch
+			//position the branches
 			node = app_scene->get_mesh_instance(0)->get_node();
-			//node->rotate(90, vec3(1, 0, 0));
-			
-			node2 = app_scene->get_mesh_instance(1)->get_node();
-			//node2->loadIdentity();
-			//node2->rotate(90, vec3(0, 0, 1));
-			//node2->loadIdentity();
-			//node2->rotate(ANGLE, vec3(1, 0, 0));
-			//snode2->loadIdentity();
 
-			//node2->loadIdentity();
-			node2->translate(vec3(halflength*cos((ANGLE + 90)*PI / 180),halflength+halflength*sin((ANGLE + 90)*PI / 180),0));
+
+			node2 = app_scene->get_mesh_instance(1)->get_node();
+
+
+
+			node2->translate(vec3(halflength*cos((ANGLE + 90)*PI / 180), halflength + halflength*sin((ANGLE + 90)*PI / 180), 0));
 			node2->rotate(ANGLE, vec3(0, 0, 1));
-			//node2->translate(vec3(halflength*0.25*, halflength*1.5, 0));
+
 			mesh_cylinder *branch3 = new mesh_cylinder((zcylinder(vec3(0, 0, 0), thickness, halflength)), mat);
 			scene_node *node3 = new scene_node();
 			app_scene->add_child(node3);
 			app_scene->add_mesh_instance(new mesh_instance(node3, branch3, bark));
 			node3 = app_scene->get_mesh_instance(2)->get_node();
-			
+
 			node3->translate(vec3(0, 2 * halflength, 0));
 
 			mesh_cylinder *branch4 = new mesh_cylinder((zcylinder(vec3(0, 0, 0), thickness, halflength)), mat);
@@ -88,8 +76,8 @@ namespace octet {
 			app_scene->add_child(node4);
 			app_scene->add_mesh_instance(new mesh_instance(node4, branch4, bark));
 			node4 = app_scene->get_mesh_instance(3)->get_node();
-			
-			node4->translate(vec3(halflength*cos((-1*ANGLE + 90)*PI / 180), 3*halflength + halflength*sin((-1*ANGLE + 90)*PI / 180), 0));
+
+			node4->translate(vec3(halflength*cos((-1 * ANGLE + 90)*PI / 180), 3 * halflength + halflength*sin((-1 * ANGLE + 90)*PI / 180), 0));
 			node4->rotate(-1 * ANGLE, vec3(0, 0, 1));
 
 			mesh_cylinder *branch5 = new mesh_cylinder((zcylinder(vec3(0, 0, 0), thickness, halflength)), mat);
@@ -99,12 +87,49 @@ namespace octet {
 			node5 = app_scene->get_mesh_instance(4)->get_node();
 
 			node5->translate(vec3(0, 4 * halflength, 0));
+					
+		}//tests
+		
+		void turtlemoveforward()
+		void oneIteration() {
+			char Turtlecommands[25];
+			
+			strcpy(Turtlecommands, PRODUCTION);
 
-			// printf("%s", PRODUCTION);
+			int max = sizeof(Turtlecommands);
 
-			// vec3 pos= app_scene->get_mesh_instance(0)->get_node()->get_position();
+			for (int i = 0; i < max; i++) {
+				switch (Turtlecommands[i]) {
+				case 'F':
+					turtlemoveforward();
+					break;
+				case '+':
+				case '-':
+				case'[' :
+				case']':
 
-			 //printf("( %i , %i , %i )", pos.x(), pos().y(), pos.()z);
+
+				}
+
+			}//for
+
+		}//oneIteration
+			/// this is called once OpenGL is initialized
+		void app_init() {
+			//-	mouse_look_helper.init(this, 200.0f / 360.0f, false);
+			mcamera.init(this, 1, 100);
+
+			app_scene = new visual_scene();
+			app_scene->create_default_camera_and_lights();
+
+			the_camera = app_scene->get_camera_instance(0);
+			the_camera->get_node()->translate(vec3(0, 4, 0));
+			the_camera->set_far_plane(10000);
+			//the_camera->set_near_plane(0.001);
+
+			//tests();
+			
+			oneIteration();
 
 			 // create the overlay
 			overlay = new text_overlay();
@@ -141,11 +166,14 @@ namespace octet {
 			scene_node *node = app_scene->get_mesh_instance(1)->get_node();
 			// node->rotate(1, vec3(0, 0, 1));
 			// node->rotate(1, vec3(1, 1, 0));
+			//vec3 pos = node->get_position();
+
+
 
 
 			// write some text to the overlay
 			char buf[3][256];
-			const mat4t &mx = node->access_nodeToParent();
+			 mat4t &mx = node->access_nodeToParent();
 
 			text->clear();
 
@@ -163,6 +191,9 @@ namespace octet {
 
 			// draw the text overlay
 			overlay->render(vx, vy);
+
+			//Move the camera with the mouse
+			mcamera.update(app_scene->get_camera_instance(0)->get_node()->access_nodeToParent());
 
 
 
