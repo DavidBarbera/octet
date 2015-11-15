@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <sstream>
 
+#include "_lsystem.h"
+#include "Turtle.h"
+
 #define PRODUCTION "F[+F]F[-F]F"
 #define PRODUCTION2 "F[+F]F[-F]F[F]"
 #define ANGLE 45
@@ -80,6 +83,9 @@ namespace octet {
 		/*	TurtleState* init = new TurtleState;
 			init->setstate(vec3(0, 0, 0), 90);
 			state.push_back(init);*/
+
+			_lsystem *ls1 = new _lsystem;
+			ls1->init();
 
 			//tests();
 			initTurtle();
@@ -192,6 +198,13 @@ namespace octet {
 			TurtleState* current = new TurtleState;
 			current->setstate(turtlestate->pos(),turtlestate->ang());
 			return current;
+		}
+
+		void iterate() {
+			char rule[25];
+			strcpy(rule, PRODUCTION);
+
+
 		}
 	void oneIteration() {
 			char chain[25];
