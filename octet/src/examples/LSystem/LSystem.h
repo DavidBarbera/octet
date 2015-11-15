@@ -7,7 +7,8 @@
 #include <stdio.h>
 #include <sstream>
 
-#define PRODUCTION "F+FF-FF"
+#define PRODUCTION "F[+F]F[-F]F"
+#define PRODUCTION2 "F[+F]F[-F]F[F]"
 #define ANGLE 45
 #define PI 3.1415926535897932384626433832795028841971693993751
 #define RANGLE ANGLE*PI/180
@@ -160,7 +161,7 @@ namespace octet {
 					
 		}//tests
 		
-		TurtleState* turtlemoveforward(TurtleState *fromstate) {
+		void turtlemoveforward(TurtleState *fromstate) {
 			material *bark = new material(vec4(0.686f, 0.3412f, 0, 1));
 			mat4t mat;
 			mat.loadIdentity();
@@ -178,27 +179,26 @@ namespace octet {
 				node->translate(toState);
 				node->rotate(toAngle, vec3(0, 0, 1));
 
-     			
-				
-
 				toState = p + vec3(2*halflength*cos((a + 90)*PI / 180), 2*halflength*sin((a + 90)*PI / 180), 0);
-				TurtleState* endstate = new TurtleState;
+				//give back next state
+				fromstate->setstate(toState, toAngle);
+				/*TurtleState* endstate = new TurtleState;
 				endstate->setstate(toState, toAngle);
-				state.push_back(endstate);
-				return endstate;
-				printf("%f\n", cos((a + 90)*PI / 180));
-				
-		/*
-			//position the branch
-			node->translate(fromstate->pos() + vec3(halflength*cos((state[s]->ang())*PI / 180), halflength*sin((state[s]->ang())*PI / 180), 0));
-			//node->rotate(state[s]->ang(), vec3(0, 0, 1));
-			*/
+				state.push_back(endstate);*/
+				//return fromstate;
+		}
 
+		TurtleState* newstate(TurtleState* turtlestate) {
+			TurtleState* current = new TurtleState;
+			current->setstate(turtlestate->pos(),turtlestate->ang());
+			return current;
 		}
 	void oneIteration() {
 			char chain[25];
-			TurtleState* currentstate = state[0];
-			
+			TurtleState* currentstate = new TurtleState;
+			currentstate->setstate(state[0]->pos(),state[0]->ang());
+			//state.push_back(newstate(currentstate));
+
 			strcpy(chain, PRODUCTION);
 
 			int max = strlen(chain);
@@ -206,19 +206,25 @@ namespace octet {
 			for (int i = 0; i < max; i++) {
 				switch (chain[i]) {
 				case 'F':
-				  currentstate = turtlemoveforward(currentstate);
+				   turtlemoveforward(currentstate);
 					break;
-				case '+': currentstate->setangle(currentstate->ang() + ANGLE);
+				case '+':
+					currentstate->setangle(currentstate->ang() + ANGLE);
 					break;
-				case '-':currentstate->setangle(currentstate->ang() - ANGLE);
+				case '-':
+					currentstate->setangle(currentstate->ang() - ANGLE);
 					break;
-			/*	case'[':
+				case'[':
+					state.push_back(newstate(currentstate));
 					break;
 				case']':
+					currentstate->setstate(state.back()->pos(), state.back()->ang());
+					state.pop_back();
 					break;
-				default:*/
 				} //switch
-		} //for
+		    } //for
+
+			//delete currentstate;
 		} //oneIteration
 		
 		void initTurtle() {
