@@ -8,11 +8,11 @@
 #include <sstream>
 
 #include "_lsystem.h"
-#include "Turtle.h"
+//#include "Turtle.h"
 
 #define PRODUCTION "F[+F]F[-F]F"
 #define PRODUCTION2 "F[+F]F[-F]F[F]"
-#define ANGLE 45
+#define ANGLE 25.7
 #define PI 3.1415926535897932384626433832795028841971693993751
 #define RANGLE ANGLE*PI/180
 
@@ -84,8 +84,7 @@ namespace octet {
 			init->setstate(vec3(0, 0, 0), 90);
 			state.push_back(init);*/
 
-			_lsystem *ls1 = new _lsystem;
-			ls1->init();
+			
 
 			//tests();
 			initTurtle();
@@ -167,12 +166,12 @@ namespace octet {
 					
 		}//tests
 		
-		void turtlemoveforward(TurtleState *fromstate) {
+		void turtlemoveforward(TurtleState *fromstate, float length, float thick) {
 			material *bark = new material(vec4(0.686f, 0.3412f, 0, 1));
 			mat4t mat;
 			mat.loadIdentity();
 			mat.rotate(90.0f, 1, 0, 0);
-			mesh_cylinder *branch = new mesh_cylinder((zcylinder(vec3(0, 0, 0), thickness, halflength)), mat);
+			mesh_cylinder *branch = new mesh_cylinder((zcylinder(vec3(0, 0, 0), thick, length)), mat);
 			scene_node *node = new scene_node();
 			app_scene->add_child(node);
 			app_scene->add_mesh_instance(new mesh_instance(node, branch, bark));
@@ -180,12 +179,12 @@ namespace octet {
 			vec3 p = fromstate->pos();
 			float a = fromstate->ang();
 
-			vec3 toState = p + vec3(halflength*cos((a+90)*PI/ 180), halflength*sin((a+90)*PI / 180), 0);
+			vec3 toState = p + vec3(length*cos((a+90)*PI/ 180),length*sin((a+90)*PI / 180), 0);
 				float toAngle = a;
 				node->translate(toState);
 				node->rotate(toAngle, vec3(0, 0, 1));
 
-				toState = p + vec3(2*halflength*cos((a + 90)*PI / 180), 2*halflength*sin((a + 90)*PI / 180), 0);
+				toState = p + vec3(2*length*cos((a + 90)*PI / 180), 2*length*sin((a + 90)*PI / 180), 0);
 				//give back next state
 				fromstate->setstate(toState, toAngle);
 				/*TurtleState* endstate = new TurtleState;
@@ -207,19 +206,23 @@ namespace octet {
 
 		}
 	void oneIteration() {
-			char chain[25];
 			TurtleState* currentstate = new TurtleState;
 			currentstate->setstate(state[0]->pos(),state[0]->ang());
-			//state.push_back(newstate(currentstate));
-
-			strcpy(chain, PRODUCTION);
-
-			int max = strlen(chain);
-
-			for (int i = 0; i < max; i++) {
-				switch (chain[i]) {
+			
+			_lsystem *ls1 = new _lsystem;
+			ls1->init();
+			float scale = 0.4f;
+			float factor = 1;
+			float distance = halflength;
+			float thickbrush = thickness;
+			unsigned int n = 5; ///////////
+			unsigned int max = ls1->iteration[n].size();
+			for (unsigned int j = 1; j < n; j++) factor = factor * scale; //calculating reduction factor according to iteration
+			
+			for (unsigned int i = 0; i < max; i++) {
+				switch (ls1->iteration[n][i]) {
 				case 'F':
-				   turtlemoveforward(currentstate);
+				   turtlemoveforward(currentstate, factor*distance, 2.5f*factor*thickbrush);
 					break;
 				case '+':
 					currentstate->setangle(currentstate->ang() + ANGLE);

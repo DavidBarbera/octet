@@ -1,5 +1,6 @@
 // the lsystem itself
 #include <stdio.h>
+//#include "Turtle.h"
 
 #define _RULE_ "F[+F]F[-F]F"
 #define _W_ "F"
@@ -9,10 +10,10 @@ namespace octet {
 
 		char rule[5][255];
 		char word[255];
-		dynarray<dynarray<char>> iteration;
 		unsigned int max_iterations;
 	public:
 		// It will be initialized with a file, once tested
+		dynarray<dynarray<char>> iteration;
 		_lsystem() {}
 
 		void init() {
@@ -89,7 +90,9 @@ namespace octet {
 				
 
 			return (size_rule*replaceable_symbols_in_prev_iteration + total_symbols_in_prev_iteration - replaceable_symbols_in_prev_iteration);
-		}
+		} //space_needed()
+
+	
 	};
 
 }
