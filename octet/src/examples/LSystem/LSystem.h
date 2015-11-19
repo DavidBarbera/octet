@@ -215,7 +215,7 @@ namespace octet {
 			float factor = 1;
 			float distance = halflength;
 			float thickbrush = thickness;
-			unsigned int n = 5; ///////////
+			unsigned int n = 3; ///////////
 			unsigned int max = ls1->iteration[n].size();
 			for (unsigned int j = 1; j < n; j++) factor = factor * scale; //calculating reduction factor according to iteration
 			
