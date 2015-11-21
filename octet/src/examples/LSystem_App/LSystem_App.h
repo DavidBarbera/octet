@@ -4,6 +4,12 @@
 //
 // Modular Framework for OpenGLES2 rendering on multiple platforms.
 //
+
+#include "LSystem.h"
+#include "Turtle.h"
+#include "DrawTree.h"
+
+
 namespace octet {
   /// Scene containing a box with octet.
   class LSystem_App : public app {
@@ -24,6 +30,9 @@ namespace octet {
       scene_node *node = new scene_node();
       app_scene->add_child(node);
       app_scene->add_mesh_instance(new mesh_instance(node, box, red));
+
+	  LSystem *ls1 = new LSystem;
+		  ls1->init();
     }
 
     /// this is called to draw the world

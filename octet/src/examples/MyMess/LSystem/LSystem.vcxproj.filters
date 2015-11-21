@@ -425,10 +425,7 @@
     <ClInclude Include="_lsystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="LSystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Turtle.h">
+    <ClInclude Include="LSystem_.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

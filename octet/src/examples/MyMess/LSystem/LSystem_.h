@@ -41,7 +41,7 @@ namespace octet {
 	};
 
   /// Scene containing a box with octet.
-	class LSystem : public app {
+	class LSystem_ : public app {
 
 	
 		dynarray<TurtleState*> state;
@@ -65,7 +65,7 @@ namespace octet {
 
 	public:
 		/// this is called when we construct the class before everything is initialised.
-		LSystem(int argc, char **argv) : app(argc, argv) {
+		LSystem_(int argc, char **argv) : app(argc, argv) {
 		}
 
 		/// this is called once OpenGL is initialized
