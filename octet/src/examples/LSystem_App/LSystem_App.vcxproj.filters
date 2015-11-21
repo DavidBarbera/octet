@@ -430,13 +430,13 @@
     <ClInclude Include="LSystem_App.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Turtle.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="DrawTree.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="LSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Turtle2.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

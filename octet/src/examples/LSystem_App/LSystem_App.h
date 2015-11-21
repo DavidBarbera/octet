@@ -4,10 +4,11 @@
 //
 // Modular Framework for OpenGLES2 rendering on multiple platforms.
 //
+#pragma once
 
 #include "LSystem.h"
-#include "Turtle.h"
-#include "DrawTree.h"
+#include "Turtle2.h"
+//#include "DrawTree.h"
 
 
 namespace octet {
@@ -15,25 +16,34 @@ namespace octet {
   class LSystem_App : public app {
     // scene for drawing box
     ref<visual_scene> app_scene;
+	LSystem* lsystem1;
+	Turtle* turtle1;
   public:
     /// this is called when we construct the class before everything is initialised.
     LSystem_App(int argc, char **argv) : app(argc, argv) {
     }
+
+
 
     /// this is called once OpenGL is initialized
     void app_init() {
       app_scene =  new visual_scene();
       app_scene->create_default_camera_and_lights();
 
-      material *red = new material(vec4(1, 0, 0, 1));
-      mesh_box *box = new mesh_box(vec3(4));
-      scene_node *node = new scene_node();
-      app_scene->add_child(node);
-      app_scene->add_mesh_instance(new mesh_instance(node, box, red));
 
-	  LSystem *ls1 = new LSystem;
-		  ls1->init();
+	      lsystem1= new LSystem;
+		  lsystem1->load_file("Tree3.ls");
+		  lsystem1->init();
+           turtle1 = new Turtle;
+		 turtle1->generate_geometry( lsystem1, 4 );
+		  //turtle1->draw_tree();
+		 
+		//  DrawTree* tree1 = new DrawTree;
+		 // tree1->draw_tree(turtle1);
+		 
+
     }
+	
 
     /// this is called to draw the world
     void draw_world(int x, int y, int w, int h) {
@@ -41,16 +51,15 @@ namespace octet {
       get_viewport_size(vx, vy);
       app_scene->begin_render(vx, vy);
 
+	  
       // update matrices. assume 30 fps.
       app_scene->update(1.0f/30);
 
       // draw the scene
       app_scene->render((float)vx / vy);
-
-      // tumble the box  (there is only one mesh instance)
-      scene_node *node = app_scene->get_mesh_instance(0)->get_node();
-      node->rotate(1, vec3(1, 0, 0));
-      node->rotate(1, vec3(0, 1, 0));
+	  //turtle1->generate_geometry(lsystem1, 3);
+	  turtle1->draw_tree();
+	//  turtle1->draw_tree();
     }
   };
 }
