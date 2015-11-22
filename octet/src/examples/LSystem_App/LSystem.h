@@ -61,7 +61,6 @@ namespace octet {
 			//in order of insertion from the file, each symbol will get a number in char format
 			for (int i = 0; i < num_symbols; i++) {
 				itoa(i, coded_symbol[i], 2);
-				printf(" %s ", coded_symbol[i]);
 			}
 			//Easier to use std::string library of tools to find and replace strings within strings.
 			// Conversion of our arrays of chars to strings:
@@ -103,26 +102,19 @@ namespace octet {
 					}
 				}
 			}
-			//debug
-			for (int i = 0; i < num_symbols; i++) std::cout << "\n\n" << strCodedSymbols[i] << " " << strSymbols[i];
-			std::cout << "\n" << strAxiom << "\n";
-			for (int i = 0; i < num_rules; i++) std::cout << strRules[i] << "\n";
 			//convert back from strings into arrays of chars this time with all re-coded:
 			int j = 0;
 			for (int i = 0; i < num_rules; i++) {
 				strncpy(coded_rule[i], strRules[i].c_str(), sizeof(coded_rule[i]));
 				coded_rule[i][sizeof(coded_rule[i]) - 1] = 0;
-				printf("\n%s %i", coded_rule[i], strRules[i].length());//debug
 			}
 			for (int i = 0; i < num_symbols; i++) {
 				strncpy(coded_symbol[i], strCodedSymbols[i].c_str(), sizeof(coded_symbol[i]));
 				coded_symbol[i][sizeof(coded_symbol[i]) - 1] = 0;
-				printf("\n%s %i", coded_symbol[i], strCodedSymbols[i].length());//debug
 			}
 			//re-coded axiom was stored as an extra rule
 			strncpy(coded_axiom, strAxiom.c_str(), sizeof(coded_axiom));
 			coded_axiom[sizeof(coded_axiom) - 1] = 0;
-			printf("\n%s %i", coded_axiom, strAxiom.length()); //debug
 
 			coding_done = 1; //so we don't have to re-code again for the same lsystem
 		}//recode_wording
@@ -138,37 +130,26 @@ namespace octet {
 			iteration[0].reserve((unsigned int)strlen(axiom));
 			for (int i = 0; i < strlen(axiom); ++i)
 				iteration[0].push_back(axiom[i]);
-			//debug
-			printf("\n");
 			for (unsigned int i = 0; i < iteration[0].size(); ++i)
-				printf("%c", iteration[0][i]);
-			printf("\n%i\n", iteration[0].size());
 
 			// generating all iterations
-			int k = 0; //debug
-			int l = 0; //debug
 			unsigned int rule_length = strlen(rule[0]);
 			for (unsigned int n = 1; n <= max_iterations; ++n) {
 				unsigned int space = space_needed(0, n - 1);
-				printf("\n%i\n", (int)space); //debug
 				unsigned int prev_iteration_length = iteration[n - 1].size();
 				iteration[n].reserve(space);
 				//parsing symbols in previous iteration and matching them with corresponding rules
 				for (unsigned int i = 0; i < prev_iteration_length; ++i) {
 					
 					if (iteration[n - 1][i] == 'F') {
-
 						for (unsigned int j = 0; j < rule_length; ++j) {
-							iteration[n].push_back(rule[0][j]); ++k;
-							printf("%c", rule[0][j]); //debug
+							iteration[n].push_back(rule[0][j]); 
 						}//for j
 					}
 					else {
-						iteration[n].push_back(iteration[n - 1][i]); ++k; ++l;
-						printf("%c", iteration[n - 1][i]); //debug
+						iteration[n].push_back(iteration[n - 1][i]);
 					} //if-else
 				} //for i
-				printf("\niteration:%i, size:%i, k=%i, l=%i\n rule_length:%i\n", n, iteration[n].size(), k, l, rule_length); //debug
 			} //for n
 
 		} //init()
@@ -184,19 +165,11 @@ namespace octet {
 			iteration[0].reserve((unsigned int)strlen(axiom));
 			for (int i = 0; i < strlen(coded_axiom); ++i)
 				iteration[0].push_back(coded_axiom[i]);
-			//debug
-			printf("\n");
 			for (unsigned int i = 0; i < iteration[0].size(); ++i)
-				printf("%c", iteration[0][i]);
-			printf("\niteration: 0 size: %i\n", iteration[0].size());
-			printf("---------\n");
 			// generating all iterations
-			int m = 0; //debug
-			int n = 0; //debug
 			unsigned int rule_length = strlen(coded_rule[0]);
 			for (unsigned int n = 1; n <= max_iterations; ++n) {
 				unsigned int space = space_needed2(n - 1);
-				//printf("\n%i\n", (int)space); //debug
 				unsigned int prev_iteration_length = iteration[n - 1].size();
 				iteration[n].reserve(space);
 				//parsing symbols in previous iteration and matching them with corresponding rules
@@ -209,17 +182,13 @@ namespace octet {
 							rule_length = strlen(coded_rule[j]);
 							for (unsigned int k = 0; k < rule_length; ++k) {
 								iteration[n].push_back(coded_rule[j][k]); //++m;
-								printf("%c", coded_rule[j][k]); //debug
 							}//for k
-							//printf("\n rule[%i] length: %i", j, rule_length); //debug
 						} //if-with match
 					} //for j
 					if (match == 0) { // match==0 meaning the symbol wasn't meant to be replaced by a rule but a turtle instruction('+','-','/'...)
 							iteration[n].push_back(iteration[n - 1][i]); //++m; ++n;
-							printf("%c", iteration[n - 1][i]); //debug
 					} //if-with no match
 				} //for i
-				printf("\niteration:%i, size:%i, space:%i\n\n", n, iteration[n].size(),(int)space); //debug
 			} //for n
 
 		} //init2()
@@ -389,13 +358,7 @@ namespace octet {
 					commandcount++;
 					break;
 				}// switch for reading formatted file *.ls  
-				printf("%s", buffer);
 			}
-			printf("\n%i  %f %f %f\n", max_iterations, angle, length, thickness);
-			for (int i = 0; i < num_symbols; i++) printf("%s ", symbol[i]);
-			printf("\n%s\n", axiom);
-			for (int i = 0; i < num_rules; i++) printf("%s \n", rule[i]);
-			printf("\n");
 
 			return 0;
 		}

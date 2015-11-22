@@ -32,8 +32,8 @@ namespace octet {
 
 
 	      lsystem1= new LSystem;
-		  lsystem1->load_file("Tree11.ls");
-		  lsystem1->init2();
+		  lsystem1->load_file("Tree14.ls");
+		  lsystem1->init();
 		 // lsystem1->recode_wording();
           turtle1 = new Turtle;
 	      turtle1->generate_geometry( lsystem1, lsystem1->get_max_iteration() );
