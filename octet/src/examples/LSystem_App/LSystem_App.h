@@ -32,10 +32,11 @@ namespace octet {
 
 
 	      lsystem1= new LSystem;
-		  lsystem1->load_file("Tree3.ls");
-		  lsystem1->init();
-           turtle1 = new Turtle;
-		 turtle1->generate_geometry( lsystem1, 4 );
+		  lsystem1->load_file("Tree1.ls");
+		  lsystem1->init2();
+		 // lsystem1->recode_wording();
+       //    turtle1 = new Turtle;
+		// turtle1->generate_geometry( lsystem1, 4 );
 		  //turtle1->draw_tree();
 		 
 		//  DrawTree* tree1 = new DrawTree;
@@ -58,7 +59,7 @@ namespace octet {
       // draw the scene
       app_scene->render((float)vx / vy);
 	  //turtle1->generate_geometry(lsystem1, 3);
-	  turtle1->draw_tree();
+	 // turtle1->draw_tree();
 	//  turtle1->draw_tree();
     }
   };

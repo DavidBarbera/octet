@@ -1,9 +1,11 @@
 // the LSystem itself
 #pragma once
+
 #include <stdio.h>
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 //#include "Turtle.h"
 
@@ -14,13 +16,17 @@
 #define _ANGLE_ 25.7
 #define _NUM_RULES_ 1
 
+#define _MAX_ 10
+
 namespace octet {
 	class LSystem : public resource {
 
-		char rule[5][255];
-		char word[255];
-		char symbol[5][255];
-		//dynarray<char*> word_ptr;
+		char rule[_MAX_][255];
+		char coded_rule[_MAX_][255];
+		char axiom[255];
+		char coded_axiom[255];
+		char symbol[_MAX_][255];
+		char coded_symbols[_MAX_];
 		unsigned int max_iterations;
 		float angle;
 		unsigned int num_symbols;
@@ -28,29 +34,95 @@ namespace octet {
 	public:
 	/*	LSystem() {
 			strcpy(rule[0], _RULE_);
-			strcpy(word, _W_);
+			strcpy(axiom, _W_);
 			max_iterations = _N_ + 1;
 			angle = _ANGLE_;
 			num_rules = _NUM_RULES_;
 		}*/
 	
 		// It will be initialized with a file, once tested
+		char coded_symbol[_MAX_][255];
 		dynarray<dynarray<char>> iteration;
 		//LSystem() {}
 
-	
+		
+		void recode_wording() {
+			//Any symbol-word will be re-coded into a single character to ease computations.
+			// ex: 'plant' or 'internode', will become '0' and '1' char, in order of appearance in the file.
+			// Axiom, rules and any iteration will use this coding as well. Rest of the symbols like +, -
+			// [,],$,&,^,\,/ are simple enough so they are kept the same.
+			//in order of insertion from the file, each symbol will get a number in char format
+			for (int i = 0; i < num_symbols; i++) {
+				itoa(i, coded_symbol[i], 2);
+				printf(" %s ", coded_symbol[i]);
+			}
+			//Easier to use std::string library of tools to find and replace strings within strings.
+			// Conversion of our arrays of chars to strings:
+			std::vector<std::string> strRules;
+			std::vector<std::string> strSymbols;
+			std::vector<std::string> strCodedSymbols;
+			std::string strAxiom(axiom);
+			for (int i = 0; i < num_rules; i++) strRules.push_back(rule[i]);
+			for (int i = 0; i < num_symbols; i++) {
+				strSymbols.push_back(symbol[i]);
+				strCodedSymbols.push_back(coded_symbol[i]);
+			}
+
+			//re-code rules
+			for (int i = 0; i < num_rules; i++) {
+				for (int j = 0; j < num_symbols; j++) {
+					for (int k = 0; k < strRules[i].length(); k++) {
+						if (strRules[i].find(strSymbols[j], strSymbols[j].length()) != -1) {
+							strRules[i].replace(strRules[i].find(strSymbols[j]), strSymbols[j].length(), strCodedSymbols[j]);
+						}
+				    }
+				}
+			}
+
+			//re-code axiom
+			for (int j = 0; j < num_symbols; j++) {
+					//if (strAxiom.find(strSymbols[j], strSymbols[j].length()) != -1) {
+						strAxiom.replace(strAxiom.find(strSymbols[j]), strSymbols[j].length(), strCodedSymbols[j]);
+					//}
+			}
+			//debug
+			for (int i = 0; i < num_symbols; i++) std::cout << "\n\n" << strCodedSymbols[i] << " " << strSymbols[i];
+			std::cout << "\n" << strAxiom << "\n";
+			for (int i = 0; i < num_rules; i++) std::cout << strRules[i] << "\n";
+			//convert back from strings into arrays of chars this time with all re-coded:
+			int j = 0;
+			for (int i = 0; i < num_rules; i++) {
+				strncpy(coded_rule[i], strRules[i].c_str(), sizeof(coded_rule[i]));
+				coded_rule[i][sizeof(coded_rule[i]) - 1] = 0;
+				printf("\n%s %i", coded_rule[i], strRules[i].length());//debug
+			}
+			for (int i = 0; i < num_symbols; i++) {
+				strncpy(coded_symbol[i], strCodedSymbols[i].c_str(), sizeof(coded_symbol[i]));
+				coded_symbol[i][sizeof(coded_symbol[i]) - 1] = 0;
+				printf("\n%s %i", coded_symbol[i], strCodedSymbols[i].length());//debug
+			}
+			strncpy(coded_axiom, strAxiom.c_str(), sizeof(coded_axiom));
+			coded_axiom[sizeof(coded_axiom) - 1] = 0;
+			printf("\n%s %i", coded_axiom, strAxiom.length()); //debug
+
+			for (int i = 0; i < num_symbols; i++) {
+				coded_symbols[i] = coded_symbol[i][0];
+				printf("\n coded symbol[%i] = %c  %s", i, coded_symbols[i], coded_symbol[i]);
+			}
+
+		}//recode_wording
 
 		void init() {
 		/*	strcpy(rule[0], _RULE_);
-			strcpy(word, _W_);
+			strcpy(axiom, _W_);
 			max_iterations = _N_+1;
 			angle = _ANGLE_;*/
-
+			
 			iteration.resize(max_iterations+1);
 
-			iteration[0].reserve((unsigned int)strlen(word));
-			for (int i = 0; i < strlen(word); ++i)
-				iteration[0].push_back(word[i]);
+			iteration[0].reserve((unsigned int)strlen(axiom));
+			for (int i = 0; i < strlen(axiom); ++i)
+				iteration[0].push_back(axiom[i]);
 			//debug
 			printf("\n");
 			for (unsigned int i = 0; i < iteration[0].size(); ++i)
@@ -66,7 +138,9 @@ namespace octet {
 				printf("\n%i\n", (int)space); //debug
 				unsigned int prev_iteration_length = iteration[n - 1].size();
 				iteration[n].reserve(space);
+				//parsing symbols in previous iteration and matching them with corresponding rules
 				for (unsigned int i = 0; i < prev_iteration_length; ++i) {
+					
 					if (iteration[n - 1][i] == 'F') {
 
 						for (unsigned int j = 0; j < rule_length; ++j) {
@@ -83,6 +157,82 @@ namespace octet {
 			} //for n
 
 		} //init()
+
+		void init2() {
+			/*	strcpy(rule[0], _RULE_);
+			strcpy(axiom, _W_);
+			max_iterations = _N_+1;
+			angle = _ANGLE_;*/
+			recode_wording();
+			iteration.resize(max_iterations + 1);
+
+			iteration[0].reserve((unsigned int)strlen(axiom));
+			for (int i = 0; i < strlen(coded_axiom); ++i)
+				iteration[0].push_back(coded_axiom[i]);
+			//debug
+			printf("\n");
+			for (unsigned int i = 0; i < iteration[0].size(); ++i)
+				printf("%c", iteration[0][i]);
+			printf("\niteration: 0 size: %i\n", iteration[0].size());
+			printf("---------\n");
+			// generating all iterations
+			int m = 0; //debug
+			int n = 0; //debug
+			unsigned int rule_length = strlen(coded_rule[0]);
+			for (unsigned int n = 1; n <= max_iterations; ++n) {
+				unsigned int space = space_needed2(n - 1);
+				//printf("\n%i\n", (int)space); //debug
+				unsigned int prev_iteration_length = iteration[n - 1].size();
+				iteration[n].reserve(space);
+				//parsing symbols in previous iteration and matching them with corresponding rules
+				int match; //keep track if there is a match for a rule-symbol substitution
+				for (unsigned int i = 0; i < prev_iteration_length; ++i) {
+					int match = 0; // initialize to no match
+					for (int j = 0; j < num_symbols; j++) {
+						if (iteration[n - 1][i] == coded_symbol[j][0]) {
+							match = 1; // yes match
+							rule_length = strlen(coded_rule[j]);
+							for (unsigned int k = 0; k < rule_length; ++k) {
+								iteration[n].push_back(coded_rule[j][k]); //++m;
+								printf("%c", coded_rule[j][k]); //debug
+							}//for k
+							//printf("\n rule[%i] length: %i", j, rule_length); //debug
+						} //if-with match
+					} //for j
+					if (match == 0) { // match==0 meaning the symbol wasn't meant to be replaced by a rule but a turtle instruction('+','-','/'...)
+							iteration[n].push_back(iteration[n - 1][i]); //++m; ++n;
+							printf("%c", iteration[n - 1][i]); //debug
+					} //if-with no match
+				} //for i
+				printf("\niteration:%i, size:%i, space:%i\n\n", n, iteration[n].size(),(int)space); //debug
+			} //for n
+
+		} //init2()
+
+		unsigned int space_needed2( int prev_iteration ) {
+			unsigned int replaceable_symbol_in_prev_iteration[_MAX_];
+			unsigned int total_symbols_in_prev_iteration = iteration[prev_iteration].size();
+			
+			for (int i = 0; i < _MAX_; i++) replaceable_symbol_in_prev_iteration[i] = 0;
+
+			for (unsigned int i = 0; i < total_symbols_in_prev_iteration; ++i) {
+				for (int j = 0; j < num_symbols; j++) {
+					if (iteration[prev_iteration][i] == coded_symbol[j][0]) {
+						replaceable_symbol_in_prev_iteration[j] = replaceable_symbol_in_prev_iteration[j] + 1;
+					}
+				}
+			}
+
+			//assuming each symbol has one single rule. File must comply with order to match 1st symbol with 1st rule, 2nd symbol with 2nd rule, and so on.
+			unsigned int size_when_all_rules_substituted = 0;
+			unsigned int total_replaceables = 0;
+			for (int i = 0; i < num_symbols; i++) {
+				size_when_all_rules_substituted = strlen(coded_rule[i])*replaceable_symbol_in_prev_iteration[i] + size_when_all_rules_substituted;
+				total_replaceables = replaceable_symbol_in_prev_iteration[i] + total_replaceables;
+			}
+
+			return (size_when_all_rules_substituted + total_symbols_in_prev_iteration - total_replaceables);
+		} //space_needed()
 
 		unsigned int space_needed(int num_rule, int prev_iteration) {
 			unsigned int size_rule = strlen(rule[num_rule]);
@@ -155,7 +305,7 @@ namespace octet {
 					commandcount++;
 					break;
 				case 8:
-					strcpy(word, buffer);
+					strcpy(axiom, buffer);
 					commandcount++;
 					break;
 				case 9:
@@ -182,7 +332,7 @@ namespace octet {
 			}
 			printf("\n%i  %f\n", max_iterations, angle);
 			for (int i = 0; i < num_symbols; i++) printf("%s ", symbol[i]);
-			printf("\n%s\n", word);
+			printf("\n%s\n", axiom);
 			for (int i = 0; i < num_rules; i++) printf("%s ", rule[i]);
 			printf("\n");
 
