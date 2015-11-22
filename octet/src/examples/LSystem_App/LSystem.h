@@ -26,11 +26,16 @@ namespace octet {
 		char axiom[255];
 		char coded_axiom[255];
 		char symbol[_MAX_][255];
-		char coded_symbols[_MAX_];
-		unsigned int max_iterations;
-		float angle;
+
 		unsigned int num_symbols;
 		unsigned int num_rules;
+		bool coding_done;
+
+		unsigned int max_iterations;
+		float angle;
+		float length;
+		float thickness;
+		
 	public:
 	/*	LSystem() {
 			strcpy(rule[0], _RULE_);
@@ -43,7 +48,9 @@ namespace octet {
 		// It will be initialized with a file, once tested
 		char coded_symbol[_MAX_][255];
 		dynarray<dynarray<char>> iteration;
-		//LSystem() {}
+		LSystem() {
+			coding_done = 0;
+		}
 
 		
 		void recode_wording() {
@@ -61,7 +68,7 @@ namespace octet {
 			std::vector<std::string> strRules;
 			std::vector<std::string> strSymbols;
 			std::vector<std::string> strCodedSymbols;
-			std::string strAxiom(axiom);
+			std::string strAxiom (axiom);
 			for (int i = 0; i < num_rules; i++) strRules.push_back(rule[i]);
 			for (int i = 0; i < num_symbols; i++) {
 				strSymbols.push_back(symbol[i]);
@@ -69,7 +76,7 @@ namespace octet {
 			}
 
 			//re-code rules
-			for (int i = 0; i < num_rules; i++) {
+			for (int i = 0; i < num_rules; i++) { 
 				for (int j = 0; j < num_symbols; j++) {
 					for (int k = 0; k < strRules[i].length(); k++) {
 						if (strRules[i].find(strSymbols[j], strSymbols[j].length()) != -1) {
@@ -80,10 +87,21 @@ namespace octet {
 			}
 
 			//re-code axiom
-			for (int j = 0; j < num_symbols; j++) {
-					//if (strAxiom.find(strSymbols[j], strSymbols[j].length()) != -1) {
-						strAxiom.replace(strAxiom.find(strSymbols[j]), strSymbols[j].length(), strCodedSymbols[j]);
-					//}
+			if (strAxiom.length() == 1) {
+				for (int j = 0; j < num_symbols; j++) {
+					if (strAxiom[0] == strSymbols[j][0]) {
+						strAxiom = strCodedSymbols[j];
+					}
+				}
+			}
+			else {
+				for (int j = 0; j < num_symbols; j++) {
+					for (int k = 0; k < strAxiom.length(); k++) {
+						if (strAxiom.find(strSymbols[j], strSymbols[j].length()) != -1) {
+							strAxiom.replace(strAxiom.find(strSymbols[j]), strSymbols[j].length(), strCodedSymbols[j]);
+						}
+					}
+				}
 			}
 			//debug
 			for (int i = 0; i < num_symbols; i++) std::cout << "\n\n" << strCodedSymbols[i] << " " << strSymbols[i];
@@ -101,15 +119,12 @@ namespace octet {
 				coded_symbol[i][sizeof(coded_symbol[i]) - 1] = 0;
 				printf("\n%s %i", coded_symbol[i], strCodedSymbols[i].length());//debug
 			}
+			//re-coded axiom was stored as an extra rule
 			strncpy(coded_axiom, strAxiom.c_str(), sizeof(coded_axiom));
 			coded_axiom[sizeof(coded_axiom) - 1] = 0;
 			printf("\n%s %i", coded_axiom, strAxiom.length()); //debug
 
-			for (int i = 0; i < num_symbols; i++) {
-				coded_symbols[i] = coded_symbol[i][0];
-				printf("\n coded symbol[%i] = %c  %s", i, coded_symbols[i], coded_symbol[i]);
-			}
-
+			coding_done = 1; //so we don't have to re-code again for the same lsystem
 		}//recode_wording
 
 		void init() {
@@ -159,11 +174,11 @@ namespace octet {
 		} //init()
 
 		void init2() {
-			/*	strcpy(rule[0], _RULE_);
-			strcpy(axiom, _W_);
-			max_iterations = _N_+1;
-			angle = _ANGLE_;*/
-			recode_wording();
+
+			if (coding_done == 0) {
+				recode_wording();
+			}
+
 			iteration.resize(max_iterations + 1);
 
 			iteration[0].reserve((unsigned int)strlen(axiom));
@@ -246,6 +261,8 @@ namespace octet {
 			return (size_rule*replaceable_symbols_in_prev_iteration + total_symbols_in_prev_iteration - replaceable_symbols_in_prev_iteration);
 		} //space_needed()
 
+
+		// get methods for iterations, angle, length , thickness
 		unsigned int get_max_iteration() {
 			return max_iterations;
 		}
@@ -253,6 +270,36 @@ namespace octet {
 		float get_angle() {
 			return angle;
 		}
+
+		float get_length() {
+			return length;
+		}
+
+		float get_thickness() {
+			return thickness;
+		}
+
+		//set methods for iterations, angle, length, thickness
+		// iterations may need init() again
+		void set_max_iteration(unsigned int n) {
+			if (max_iterations < n) {
+				max_iterations = n;
+				init2();
+			} 
+		}
+
+		void set_angle(float alpha) {
+			 angle = alpha;
+		}
+
+		void set_length(float l) {
+			 length = l;
+		}
+
+		void set_thickness(float t) {
+			 thickness = t;
+		}
+		
 
 		bool load_file(string filename) {
 			//std::ifstream is("../../assets/LSystems/Tree1.ls");
@@ -287,13 +334,27 @@ namespace octet {
 					commandcount++;
 					break;
 				case 5:
+					length = atof(buffer);
+					commandcount++;
+					break;
+				case 6:
+					commandcount++;
+					break;
+				case 7:
+					thickness = atof(buffer);
+					commandcount++;
+					break;
+				case 8:
+					commandcount++;
+					break;
+				case 9:
 					if (fieldcount == 0) {
 						num_symbols = atoi(buffer);
 						fieldcount = num_symbols;
 					} 
 					commandcount++;
 					break;
-				case 6:
+				case 10:
 					strcpy(symbol[num_symbols - fieldcount], buffer);
 					if (fieldcount > 1) {
 						commandcount--;
@@ -301,24 +362,24 @@ namespace octet {
 					} else if (fieldcount == 1) fieldcount = 0;
 					commandcount++;
 					break;
-				case 7:
+				case 11:
 					commandcount++;
 					break;
-				case 8:
+				case 12:
 					strcpy(axiom, buffer);
 					commandcount++;
 					break;
-				case 9:
+				case 13:
 					commandcount++;
 					break;
-				case 10:
+				case 14:
 					if (fieldcount == 0) {
 						num_rules = atoi(buffer);
 						fieldcount = num_rules;
 					}
 					commandcount++;
 					break;
-				case 11:
+				case 15:
 					strcpy(rule[num_rules - fieldcount], buffer);
 					if (fieldcount > 1) {
 						commandcount--;
@@ -330,10 +391,10 @@ namespace octet {
 				}// switch for reading formatted file *.ls  
 				printf("%s", buffer);
 			}
-			printf("\n%i  %f\n", max_iterations, angle);
+			printf("\n%i  %f %f %f\n", max_iterations, angle, length, thickness);
 			for (int i = 0; i < num_symbols; i++) printf("%s ", symbol[i]);
 			printf("\n%s\n", axiom);
-			for (int i = 0; i < num_rules; i++) printf("%s ", rule[i]);
+			for (int i = 0; i < num_rules; i++) printf("%s \n", rule[i]);
 			printf("\n");
 
 			return 0;

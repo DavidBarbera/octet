@@ -21,7 +21,6 @@ namespace octet {
 		};
 
 		TurtleState currentstate;
-		//TurtleVertex* tvertex;
 		dynarray<TurtleState> State;
 		dynarray<vec3> TurtleLines; // paired vertices, a pair of vertices for each line
 
@@ -73,27 +72,26 @@ namespace octet {
 			currentstate.position = State[0].position;
 			currentstate.angle = State[0].angle;
 
-			float length = 4.0f;
-			float thickness = 0.5f;
+			float angle = lsys->get_angle();
+			float length = lsys->get_length();
+			float thickness = lsys->get_thickness();
+
 			float scale = 0.4f;
 			float factor = 1;
-			float distance = length;
-			float thickbrush = thickness;
+
 			unsigned int max = lsys->iteration[n].size();
-			float angle = lsys->get_angle();
-			char symbol;
+
+			char wordsymbol;
 
 			for (unsigned int j = 1; j < n; j++) factor = factor * scale; //calculating reduction factor according to iteration
 
-																		  /*		glClearColor(0, 0, 0, 1);
-																		  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-																		  glLineWidth(thickness);*/
 
 			for (unsigned int i = 0; i < max; i++) {
-				symbol = lsys->iteration[n][i];
-				switch (symbol) {
-				case 'F':
-					moveForward( factor * length );
+				wordsymbol = lsys->iteration[n][i];
+				switch (wordsymbol) {
+				//case '1':
+				case '0':
+					moveForward( factor*length );
 					break;
 				case '+':
 					turnLeft( angle );
