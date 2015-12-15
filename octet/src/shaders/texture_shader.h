@@ -17,39 +17,31 @@ namespace octet { namespace shaders {
     GLuint samplerIndex_;
   public:
     void init() {
-
       // this is the vertex shader.
       // it is called for each corner of each triangle
       // it inputs pos and uv from each corner
       // it outputs gl_Position and uv_ to the rasterizer
-     const char vertex_shader[] = SHADER_STR(
-		 // attributes from vertex buffer
-		 attribute vec4 pos;
-	     attribute vec2 uv;
+      const char vertex_shader[] = SHADER_STR(
+        varying vec2 uv_;
 
-	    // outputs
-     	 varying vec2 uv_;
-		
+        attribute vec4 pos;
+        attribute vec2 uv;
 
-	    uniform mat4 modelToProjection;
+        uniform mat4 modelToProjection;
 
-		void main() {  gl_Position = modelToProjection * pos; uv_ = uv; }
+        void main() { gl_Position = modelToProjection * pos; uv_ = uv; }
       );
 
       // this is the fragment shader
       // after the rasterizer breaks the triangle into fragments
       // this is called for every fragment
       // it outputs gl_FragColor, the color of the pixel and inputs uv_
-	  const char fragment_shader[] = SHADER_STR(
-	  varying vec2 uv_;
-	 
-	  uniform sampler2D sampler;			
-	  void main() { 
-			  
-		  gl_FragColor = vec4( 1, 0.5, 1, 1)*texture2D(sampler, uv_);}
-	  );
-
-	
+      const char fragment_shader[] = SHADER_STR(
+        varying vec2 uv_;
+        uniform sampler2D sampler;
+        void main() { gl_FragColor = texture2D(sampler, uv_); }
+      );
+    
       // use the common shader code to compile and link the shaders
       // the result is a shader program
       shader::init(vertex_shader, fragment_shader);
